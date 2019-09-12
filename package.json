@@ -5,7 +5,11 @@
   "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-helmet": "^5.2.1",
+    "react-redux": "^7.1.1",
+    "react-scripts": "3.1.1",
+    "redux": "^4.0.4",
+    "tabletop": "^1.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,5 +31,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage" : "https://kajiri.de/mangadb"
 }

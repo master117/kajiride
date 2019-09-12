@@ -1,24 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
+import {Helmet} from "react-helmet";
 import './App.css';
+import MangaDB from './Container/MangaDB/MangaDB'
+import Navbar from './Container/Navbar/Navbar';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Helmet>
+        <title>Kajiri.de</title>
+        <script src="https://kit.fontawesome.com/0e0dccff56.js"></script>
+      </Helmet>
+      <Navbar />
+      <MangaDB />
     </div>
   );
 }

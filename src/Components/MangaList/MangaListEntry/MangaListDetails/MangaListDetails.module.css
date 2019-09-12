@@ -1,0 +1,25 @@
+.Container {
+    display: flex;
+    flex-direction: column;
+    height: 180px;
+    padding: 10px;
+    margin: 10px 0 10px 0px;
+    align-items: flex-start;
+    background-color: darkslategray;
+}
+
+.Title {
+    color: white;
+    font-size: 150%;
+}
+
+.Authors {
+    color: white;
+    font-style: italic;
+}
+
+.DetailsTable {
+    margin-top: 20px;
+    color: white;
+    text-align: left;
+}

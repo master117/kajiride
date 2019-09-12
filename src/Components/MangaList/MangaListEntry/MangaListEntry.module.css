@@ -1,0 +1,13 @@
+.Container {
+    display: flex;
+    width: 80%;
+    height: 180px;
+    padding: 10px;
+    margin: 10px 0 10px 0px;
+    align-items: center;
+    background-color: darkslategray;
+}
+
+.MangaImage {
+    height: 180px;
+}
