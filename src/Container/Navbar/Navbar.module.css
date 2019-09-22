@@ -2,6 +2,46 @@
     height: 48px;
     background-color: #333;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: space-between;
 }
+
+.Nav {
+    width: 100%;
+}
+
+.Container {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+}
+
+.Link {
+    font-size: 150%;
+    padding: 0px 20px 0px 20px;
+}
+
+.Greeting {
+    font-size: 120%;
+    color: white;
+    margin: 0px 20px 0px 20px;
+    min-width: 100px;
+}
+
+.Search {  
+    height: 40px;
+    max-width: 200px;
+    margin: 0px 20px 0px 20px;
+    flex: 1;  
+}
+
+.Button {
+    min-width: 100px;
+    font-size: 150%;
+    background: lightskyblue;
+    color: white;
+    border: 0px;
+    padding: 5px;
+    margin: 0px 20px 0px 20px;
+    border-radius: 5px;
+}  

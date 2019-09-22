@@ -1,0 +1,45 @@
+.Container {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    background-color: #2e4053;
+}
+
+.Sidebar {
+    margin: 20px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    max-width: 25%;
+    border-right: opx solid gray;
+    border-left: 0px solid gray;
+    align-items: center;
+    padding: 0px 5px 5px 5px;
+    
+}
+
+.MangaImage {
+    width: 100%;
+    
+}
+
+.MainContent {
+    margin: 20px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 60%;
+    width: 60%;
+    padding: 10px;
+    background-color: #001f3f;
+    color:white;
+}
+
+.Title {
+    font-size: 400%;
+}
+
+.SetField {
+    font-size: 150%;
+    margin: 5px 0px 5px 0px;
+}

@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.4.2",
+    "install": "^0.13.0",
+    "node-isbn": "^1.4.0",
     "react": "^16.9.0",
+    "react-cookie": "^4.0.1",
     "react-dom": "^16.9.0",
     "react-helmet": "^5.2.1",
     "react-redux": "^7.1.1",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "redux": "^4.0.4",
     "tabletop": "^1.5.2"
@@ -32,5 +37,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage" : "https://kajiri.de/mangadb"
+  "homepage": "https://kajiri.de/mangadb"
 }

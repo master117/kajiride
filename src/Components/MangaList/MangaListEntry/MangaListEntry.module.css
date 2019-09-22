@@ -1,11 +1,15 @@
 .Container {
     display: flex;
     width: 80%;
-    height: 180px;
+    min-height: 180px;
     padding: 10px;
     margin: 10px 0 10px 0px;
     align-items: center;
-    background-color: darkslategray;
+    background-color: #001f3f;
+}
+
+.Container:hover {
+    background-color: #000825;
 }
 
 .MangaImage {

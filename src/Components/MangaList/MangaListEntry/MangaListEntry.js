@@ -1,14 +1,19 @@
 import React from 'react';
 import classes from './MangaListEntry.module.css';
 import MangaListDetails from './MangaListDetails/MangaListDetails';
+import { withRouter } from 'react-router-dom';
 
 const MangaListEntry = (props) => {
+    const nextPath = (path) => {
+        props.history.push(path);
+    }
+
     return (
-        <div className={classes.Container}>
-            <img className={classes.MangaImage} src={props.manga.Bild} alt="Cover" />
+        <div className={classes.Container} onClick={() => nextPath('/manga/' + props.manga.mangaid)}>
+            <img className={classes.MangaImage} src={props.manga.image} alt="Cover" />
             <MangaListDetails manga={props.manga} />
         </div>
     );
 };
  
-export default MangaListEntry;
+export default withRouter(MangaListEntry);
