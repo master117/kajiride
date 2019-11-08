@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.6.0",
+    "axios": "^0.19.0",
     "install": "^0.13.0",
     "node-isbn": "^1.4.0",
     "react": "^16.11.0",
