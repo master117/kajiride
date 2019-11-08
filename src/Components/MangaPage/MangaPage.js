@@ -1,34 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classes from './MangaPage.module.css';
 
-const setPage = (props) => {
+const editPage = (props, fields, handleChange) => {
+    
+    const staticPage = Object.keys(fields).map(key => {
+        console.log(key);
+        console.log(fields[key]);
+        return (
+            <div className={classes.Row} key={key}>
+                <div className={[classes.SetField, classes.LeftColumn].join(' ')}>{key}:</div>
+                <input
+                    className={[classes.InputField, classes.Column].join(' ')}
+                    value={fields[key] ? fields[key] : ""}
+                    onChange={handleChange(key)}
+                />
+            </div>
+        )
+    })
+
+    return (
+        <form className={classes.FormContainer} noValidate autoComplete="off">
+            {staticPage}
+        </form >
+    )
+}
+
+const setPage = (props, fields) => {
+
+    const staticPage = Object.keys(fields).map(key => {
+        return (
+            <div className={classes.Row} key={key}>
+                <div className={[classes.SetField, classes.LeftColumn].join(' ')}>{key}:</div>
+                <div className={[classes.SetField, classes.Column].join(' ')}>{fields[key]}</div>
+            </div>
+        )
+    })
+
+    return staticPage;
+}
+
+
+const MangaPage = (props) => {
+
+    const handleChange = name => event => {
+        setValues({ ...values, [name]: event.target.value });
+    };
+
+    const [values, setValues] = useState({
+        Author: props.data.author,
+        Artist: props.data.artist,
+        Publisher: props.data.publisher,
+        Owned: props.data.ownedvolumes,
+        Total: props.data.totalvolumes,
+        Status: props.data.status,
+        Language: props.data.language,
+        Genre: props.data.genre,
+        Description: props.data.description,
+        Score: props.data.score
+    });
+
+    const [editMode, setEditMode] = useState(false);
+
+    console.log(props);
+    console.log(values);
+
     return (
         <div className={classes.Container}>
             <div className={classes.Sidebar}>
                 <img className={classes.MangaImage} src={props.data.image} alt="Cover" />
             </div>
             <div className={classes.MainContent}>
-                <div className={classes.Title}>{props.data.name}</div>
-                <div className={classes.SetField}>Author: {props.data.author}</div>
-                <div className={classes.SetField}>Artist: {props.data.artist}</div>
-                <div className={classes.SetField}>Publisher: {props.data.publisher}</div>
-                <div className={classes.SetField}>Owned: {props.data.ownedvolumes}/{props.data.totalvolumes}</div>
-                <div className={classes.SetField}>Status: {props.data.status}</div>
-                <div className={classes.SetField}>Language: {props.data.language}</div>
-                <div className={classes.SetField}>Genre: {props.data.genre}</div>
-                <div className={classes.SetField}>Description: {props.data.description}</div>
-                <div className={classes.SetField}>Score: {props.data.score}</div>
+                <div className={classes.TitleContainer}>
+                    <div className={classes.Title}>{props.data.name}</div>
+                    {editMode ? <button className={classes.Button} onClick={() => setEditMode(false)}>Save</button> : <button className={classes.Button} onClick={() => setEditMode(true)} >Edit</button>}
+                </div>
+                {editMode ? editPage(props, values, handleChange) : setPage(props, values)}
             </div>
         </div>
-    )
-}
-
-
-const MangaPage = (props) => {
-    console.log(props);
-    return (
-        setPage(props)
     );
 };
- 
+
 export default MangaPage;

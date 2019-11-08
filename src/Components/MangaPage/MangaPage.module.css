@@ -15,12 +15,10 @@
     border-left: 0px solid gray;
     align-items: center;
     padding: 0px 5px 5px 5px;
-    
 }
 
 .MangaImage {
     width: 100%;
-    
 }
 
 .MainContent {
@@ -32,14 +30,65 @@
     width: 60%;
     padding: 10px;
     background-color: #001f3f;
-    color:white;
+    color: white;
+}
+
+.TitleContainer {
+    display: flex; 
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .Title {
     font-size: 400%;
+    flex: 90%;
+    text-align: left;
 }
+
+.Button {
+    min-width: 100px;
+    font-size: 150%;
+    background: lightskyblue;
+    color: white;
+    border: 0px;
+    padding: 5px;
+    margin: 0px 20px 0px 20px;
+    border-radius: 5px;
+}  
 
 .SetField {
     font-size: 150%;
     margin: 5px 0px 5px 0px;
+    color: white !important;
 }
+
+.FormContainer {
+    width: 100%;
+}
+
+.InputField {
+    font-size: 150%;
+    margin: 5px 0px 5px 0px;
+    color: white !important;
+    background: transparent;
+    border: 0px;
+    border-bottom: 1px solid black;
+}
+
+.Row {
+    display: flex;
+    width: 50%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.LeftColumn {
+    flex: 30%;   
+    text-align: left;
+}
+
+.Column {
+    flex: 80%;   
+    text-align: left;
+}
+

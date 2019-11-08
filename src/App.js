@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import './App.css';
@@ -7,19 +8,14 @@ import MangaDB from './Container/MangaDB/MangaDB'
 import MangaReleases from './Container/MangaReleases/MangaReleases'
 import Login from './Components/Login/Login';
 import { useCookies } from 'react-cookie';
-import { connect } from "react-redux";
-import { loggedIn } from "./redux/actions/index";
-
-function mapDispatchToProps(dispatch) {
-  return {
-    loggedIn: entry => dispatch(loggedIn(entry))
-  };
-}
 
 const App = (props) => {
   const [mounted, setMounted] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
-  const [cookies] = useCookies(['user']);
+  const [cookies, setCookie, deleteCookie] = useCookies(['user']);
+  const [user, setUser] = useState(null);
+
+  const [wrongLogin, setWrongLogin] = React.useState(false);
 
   const openLoginModal = () => {
     setOpenLogin(true);
@@ -33,11 +29,46 @@ const App = (props) => {
     if (!mounted) {
       setMounted(true);
       if (cookies.user) {
-        props.loggedIn(cookies.user);
+        setUser(cookies.user);
       }
     }
   }, [mounted, cookies.user, props]);
 
+  const logIn = (username, password) => {
+    axios
+      .post(
+        (process.env.REACT_APP_ENDPOINT + "/api/login"), {
+        username: username,
+        password: password
+      }
+      )
+      .then(({ data }) => {
+        if (data != null) {
+          setWrongLogin(false);
+          closeLoginModal();
+          setCookie("user", data);
+          setUser(data);     
+        }
+        else {
+          setWrongLogin(true);
+        }
+      });
+  }
+
+  const logOut = () => {
+    axios
+      .post(
+        (process.env.REACT_APP_ENDPOINT + "/api/logout"), {
+        token: cookies.user.token,
+      }
+      )
+      .then(({ data }) => {
+          deleteCookie("user");
+          setUser(null);  
+      });
+  }
+
+  console.log(user);
   return (
     <div className="App">
       <Helmet>
@@ -47,14 +78,14 @@ const App = (props) => {
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </Helmet>
       <Router>
-        <Navbar openLogin={openLoginModal} />
+        <Navbar openLogin={openLoginModal} logOut={logOut} user={user} />
         <Route path="/" exact component={MangaDB} />
         <Route path="/manga/:id" component={MangaDB} />
         <Route path="/releases/" component={MangaReleases} />
-        {openLogin ? <Login closeLogin={closeLoginModal} /> : ""}
+        {openLogin ? <Login closeLogin={closeLoginModal} logIn={logIn} wrongLogin={wrongLogin} /> : ""}
       </Router>
     </div>
   );
 }
 
-export default connect(null, mapDispatchToProps)(App);
+export default App;

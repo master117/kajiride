@@ -18,7 +18,7 @@ class MangaDB extends Component {
   componentDidMount() {
     axios
       .get(
-        "http://localhost:57383/api/manga", {
+        (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
       }
       )
       .then(({ data }) => {
@@ -43,7 +43,7 @@ class MangaDB extends Component {
     return <MangaList data={filterData} />;
   }
 
-  render() {
+  render() {  
     if(this.state.data.length === 0)
     {
       return null;

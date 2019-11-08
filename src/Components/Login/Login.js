@@ -1,22 +1,10 @@
 import React from "react";
-import axios from 'axios';
 import Backdrop from "../Backdrop/Backdrop";
 import classes from './Login.module.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useCookies } from 'react-cookie';
-import { connect } from "react-redux";
-import { loggedIn } from "../../redux/actions/index";
-
-function mapDispatchToProps(dispatch) {
-    return {
-        loggedIn: entry => dispatch(loggedIn(entry))
-    };
-}
 
 const Login = (props) => {
-
-    const [, setCookies, ] = useCookies(['user']);
     const [values, setValues] = React.useState({
         username: '',
         password: '',
@@ -27,27 +15,20 @@ const Login = (props) => {
         setValues({ ...values, [name]: event.target.value });
     };
 
-    const Login = () => {
+    const logIn = () => {
         setValues({ ...values, loading: true });
-        axios
-            .post(
-                "http://localhost:57383/api/login", {
-                username: values.username,
-                password: values.password
-            }
-            )
-            .then(({ data }) => {
-                setCookies("user", data);
-                props.closeLogin();
-                props.loggedIn(data);             
-            });
-    }
+        props.logIn(values.username, values.password);
+      }
+
+    if(props.wrongLogin && values.loading)
+        setValues({ ...values, loading: false });
 
     return (
         <React.Fragment>
             <Backdrop closeLogin={props.closeLogin} />
             <div className={classes.LoginContainer}>
                 <form className={classes.LoginForm}>
+                    {props.wrongLogin ? <label className={classes.LoginError} >Wrong Login</label> : ""}
                     <TextField
                         id="name"
                         label="Username"
@@ -75,7 +56,7 @@ const Login = (props) => {
                             }
                         }
                     />
-                    <Button variant="contained" color="primary" className={classes.Button} onClick={() => Login()} disabled={values.loading}>
+                    <Button variant="contained" color="primary" className={classes.Button} onClick={() => logIn()} disabled={values.loading}>
                         Login
                     </Button>
                 </form>
@@ -84,4 +65,4 @@ const Login = (props) => {
     );
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default Login;
