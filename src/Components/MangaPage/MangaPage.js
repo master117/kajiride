@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import classes from './MangaPage.module.css';
+import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
 
 const editPage = (props, fields, handleChange) => {
-    
+
     const staticPage = Object.keys(fields).map(key => {
         console.log(key);
         console.log(fields[key]);
@@ -61,8 +65,20 @@ const MangaPage = (props) => {
 
     const [editMode, setEditMode] = useState(false);
 
-    console.log(props);
-    console.log(values);
+    const updateManga = () => {
+        axios
+            .post(
+                (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
+                manga: values,
+                token: props.user.token
+            }
+            )
+            .then(({ data }) => {
+                this.setState({
+                    data: data
+                })
+            });
+    }
 
     return (
         <div className={classes.Container}>
@@ -72,7 +88,11 @@ const MangaPage = (props) => {
             <div className={classes.MainContent}>
                 <div className={classes.TitleContainer}>
                     <div className={classes.Title}>{props.data.name}</div>
-                    {editMode ? <button className={classes.Button} onClick={() => setEditMode(false)}>Save</button> : <button className={classes.Button} onClick={() => setEditMode(true)} >Edit</button>}
+                    {props.user && props.user.role === 1 ?
+                        editMode ?
+                            <Button variant="contained" color="primary" className={classes.Button} onClick={() => { setEditMode(false); updateManga() }}><SaveIcon /></Button>
+                            : <Button variant="contained" color="primary" className={classes.Button} onClick={() => setEditMode(true)} ><EditIcon /></Button>
+                        : ""}
                 </div>
                 {editMode ? editPage(props, values, handleChange) : setPage(props, values)}
             </div>

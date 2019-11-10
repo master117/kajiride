@@ -28,9 +28,9 @@ class MangaDB extends Component {
       });
   }
 
-  mangaPage = (id) => {
+  mangaPage = (id, user) => {
     const filterData = this.state.data.filter(x => x.mangaid.toString() === id)[0]; 
-    return <MangaPage data={filterData} />;
+    return <MangaPage data={filterData} user={user} />;
   }
 
   mangaList = (props) => {
@@ -50,7 +50,7 @@ class MangaDB extends Component {
     }
 
     if (this.props.match.params.id) {
-      return this.mangaPage(this.props.match.params.id);
+      return this.mangaPage(this.props.match.params.id, this.props.user);
     }
     else {
       return this.mangaList();

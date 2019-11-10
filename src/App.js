@@ -67,8 +67,7 @@ const App = (props) => {
           setUser(null);  
       });
   }
-
-  console.log(user);
+  
   return (
     <div className="App">
       <Helmet>
@@ -80,7 +79,7 @@ const App = (props) => {
       <Router>
         <Navbar openLogin={openLoginModal} logOut={logOut} user={user} />
         <Route path="/" exact component={MangaDB} />
-        <Route path="/manga/:id" component={MangaDB} />
+        <Route path="/manga/:id"  render={(props) => <MangaDB {...props} user={user} />} />
         <Route path="/releases/" component={MangaReleases} />
         {openLogin ? <Login closeLogin={closeLoginModal} logIn={logIn} wrongLogin={wrongLogin} /> : ""}
       </Router>
