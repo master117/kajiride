@@ -5,24 +5,28 @@ import ReleaseEntry from "./ReleaseEntry/ReleaseEntry";
 import classes from './ReleaseOverView.module.css';
 
 const Releases = (props) => {
-    const [data, setData] = useState([]);
+    const [releases, setReleases] = useState(null);
+    const [manga, setManga] = useState(null);
 
     const getReleaseMonths = () => {
         let months = {};
 
-        for (let i = 0; i < data.length; i++) {
-            let month = getMonth(data[i]);
+        for (let i = 0; i < releases.length; i++) {
+            let month = getMonth(releases[i]);
 
             if (!months[month])
                 months[month] = [];
 
-            months[month].push(data[i]);
+            months[month].push(releases[i]);
         }
 
-        return Object.entries(months).map(x => {
+        return Object.keys(months).map(x => {
             return (
-                <AccordionTab header={x[0]} key={x[0]}>
-                    {x[0]}
+                <AccordionTab headerClassName={classes.ReleaseAccordion} header={x} key={x}>
+                    {months[x].map(y => {
+                        const currentManga = manga.find(z => z.mangaid == y.mangaId);
+                        return <ReleaseEntry release={y} manga={currentManga} key={y.mangaId} />
+                    })}
                 </AccordionTab>
             )
         });
@@ -36,17 +40,23 @@ const Releases = (props) => {
     useEffect(() => {
         axios
             .get(process.env.REACT_APP_ENDPOINT + "/api/release")
-            .then(({ data }) => { setData(data); });
+            .then(({ data }) => { setReleases(data); });
+
+        axios
+            .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
+            .then(({ data }) => { setManga(data); });
     }, []);
 
     return (
-        <div className={classes.main}>
-            <div className={classes.inner}>
-                <Accordion multiple={true}>
-                    {getReleaseMonths()}
-                </Accordion>
+        releases && manga ?
+            <div className={classes.Main}>
+                <div className={classes.Inner}>
+                    <Accordion multiple={true}>
+                        {getReleaseMonths()}
+                    </Accordion>
+                </div>
             </div>
-        </div>
+            : ""
     );
 }
 

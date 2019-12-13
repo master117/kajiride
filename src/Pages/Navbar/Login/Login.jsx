@@ -22,7 +22,6 @@ const Login = (props) => {
         props.logIn(values.username, values.password);
     }
 
-    console.log(props)
     return (
         <Dialog header={"Login/Register"} visible={props.visible} modal={true} onHide={props.onHide}>
             {props.wrongLogin ? <Message severity="warn" text="Login Failed" className={classes.LoginError} /> : ""}
