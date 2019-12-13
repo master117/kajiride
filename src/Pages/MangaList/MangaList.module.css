@@ -1,0 +1,15 @@
+.Container {
+    display: flex;
+    justify-content: center;
+    background-color: #2e4053;
+    min-height: 100%;
+    width: 100%;
+}
+
+.Inner {
+    margin-top: 20px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}

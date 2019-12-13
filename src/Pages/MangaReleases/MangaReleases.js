@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Tabletop from 'tabletop';
-import MangaList from '../../Components/MangaList/MangaList'
+import MangaList from '../MangaList/MangaList'
 //import classes from './MangaReleases.module.css';
 import { connect } from "react-redux";
 var isbn = require('node-isbn');
@@ -31,7 +31,6 @@ class MangaReleases extends Component {
     }
 
     componentDidUpdate() {
-
         console.log(this.state.data);
         if (!this.state.fetched && this.state.data.elements.length > 0) {
 

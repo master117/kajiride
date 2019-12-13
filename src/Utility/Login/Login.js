@@ -51,7 +51,7 @@ const Login = (props) => {
                             if (event.keyCode === 13) {
                                 // Cancel the default action, if needed
                                 event.preventDefault();
-                                Login();
+                                logIn();
                               }
                             }
                         }

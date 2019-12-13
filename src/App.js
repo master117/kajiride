@@ -3,10 +3,11 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import './App.css';
-import Navbar from './Container/Navbar/Navbar';
-import MangaDB from './Container/MangaDB/MangaDB'
-import MangaReleases from './Container/MangaReleases/MangaReleases'
-import Login from './Components/Login/Login';
+import Navbar from './Pages/Navbar/Navbar';
+import MangaList from './Pages/MangaList/MangaList'
+import MangaPage from './Pages/MangaPage/MangaPage'
+import MangaReleases from './Pages/MangaReleases/MangaReleases'
+import Login from './Utility/Login/Login';
 import { useCookies } from 'react-cookie';
 
 const App = (props) => {
@@ -78,8 +79,8 @@ const App = (props) => {
       </Helmet>
       <Router>
         <Navbar openLogin={openLoginModal} logOut={logOut} user={user} />
-        <Route path="/" exact component={MangaDB} />
-        <Route path="/manga/:id"  render={(props) => <MangaDB {...props} user={user} />} />
+        <Route path="/" exact component={MangaList} />
+        <Route path="/manga/:id"  render={(props) => <MangaPage {...props} user={user} />} />
         <Route path="/releases/" component={MangaReleases} />
         {openLogin ? <Login closeLogin={closeLoginModal} logIn={logIn} wrongLogin={wrongLogin} /> : ""}
       </Router>
