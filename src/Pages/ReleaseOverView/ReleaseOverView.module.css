@@ -1,0 +1,10 @@
+.main {
+    
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.inner {
+    margin-top: 30px;
+}

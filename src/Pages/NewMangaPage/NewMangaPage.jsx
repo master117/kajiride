@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
+
+import { Button } from "primereact/button"
+import { Growl } from 'primereact/growl';
+
 import classes from './NewMangaPage.module.css';
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
-import Modal from '@material-ui/core/Modal';
 import { withRouter } from 'react-router-dom';
 
 const NewMangaPage = (props) => {
@@ -21,8 +22,8 @@ const NewMangaPage = (props) => {
         Image: "image",
     }
     
+    const growl = useRef(null);
     const [data, setData] = useState([]);
-    const [showErrorModal, setShowErrorModal] = useState(false);
 
     const getPage = () => {
         const staticPage = Object.keys(editRows).map(key => {
@@ -59,15 +60,16 @@ const NewMangaPage = (props) => {
             )
             .then(({ data }) => {
                 if (data) {
+                    growl.current.show({severity: 'success', summary: 'Success', detail: 'Manga created'});
                     props.history.push('/manga/' + data.mangaid);
                 }
                 else {
-                    setShowErrorModal(true);
+                    growl.current.show({severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga'});
                 }
             })
             .catch(function (error) {   
                 // handle error
-                setShowErrorModal(true);
+                growl.show({severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga'});
                 console.log(error);
                 console.log(error.message);
                 console.log(error.config);
@@ -76,23 +78,14 @@ const NewMangaPage = (props) => {
 
     return (
         <div className={classes.Container}>
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-                open={showErrorModal}
-                onClose={x => setShowErrorModal(false)} >
-                <div className={classes.Modal}>
-                    <h2 id="simple-modal-title">Error saving Entry</h2>
-                    <p id="simple-modal-description">Data could not be saved.</p>
-                </div>
-            </Modal>
+            <Growl ref={growl} />
             <div className={classes.Sidebar}>
                 <img className={classes.MangaImage} src={data ? data.image : ""} alt="Cover" />
             </div>
             <div className={classes.MainContent}>
                 <div className={classes.TitleContainer}>
                     <div className={classes.Title}>{data.name}</div>
-                    <Button variant="contained" color="primary" className={classes.Button} onClick={() => { insertManga() }}><SaveIcon /></Button>
+                    <Button label={"Save"} icon={"pi pi-save"} className={"button"} onClick={() => { insertManga() }}></Button>
                 </div>
                 {getPage()}
             </div>

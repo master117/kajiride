@@ -37,25 +37,15 @@
     display: flex; 
     width: 100%;
     justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 20px;
 }
 
 .Title {
     font-size: 400%;
     flex: 90%;
     text-align: left;
-    margin-bottom: 20px;
 }
-
-.Button {
-    min-width: 100px;
-    font-size: 150%;
-    background: lightskyblue;
-    color: white;
-    border: 0px;
-    padding: 5px;
-    margin: 0px 20px 0px 20px;
-    border-radius: 5px;
-}  
 
 .SetField {
     font-size: 150%;
@@ -92,15 +82,3 @@
     flex: 80%;   
     text-align: left;
 }
-
-.Modal {
-    position: absolute;
-    width: 400px;
-    background-Color: white;
-    border: 2px solid #000;
-    padding: 2, 4, 3;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-

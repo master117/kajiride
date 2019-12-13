@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import { Button } from "primereact/button"
 import MangaListEntry from './MangaListEntry/MangaListEntry';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import classes from './MangaList.module.css';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
@@ -30,7 +29,7 @@ const MangaList = (props) => {
 return (
     <div className={classes.Container}>
         <div className={classes.Inner}>
-            {props.user && props.user.role === 1 ? <Button variant="contained" color="primary" className={classes.Button} onClick={() => props.history.push('/newmanga/')}><AddIcon />New Manga</Button>
+            {props.user && props.user.role === 1 ? <Button label={"New Manga"} className={"button"} icon="pi pi-plus" onClick={() => props.history.push('/newmanga/')} />
                 : ""}
             {returnData}
         </div>

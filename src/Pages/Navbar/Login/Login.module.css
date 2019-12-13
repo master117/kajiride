@@ -1,0 +1,12 @@
+.LoginError {
+    margin-bottom: 20px !important;
+}
+
+.UsernameField {
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+.PasswordField {
+    margin-bottom: 25px;
+}

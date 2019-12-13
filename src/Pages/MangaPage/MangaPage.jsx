@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+
+import { Button } from "primereact/button"
+import { Growl } from 'primereact/growl';
+
 import classes from './MangaPage.module.css';
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import Modal from '@material-ui/core/Modal';
 
 const MangaPage = (props) => {
     const viewRows = {
@@ -35,11 +35,10 @@ const MangaPage = (props) => {
         Image: "image",
     }
     
+    const growl = useRef(null);
     const [data, setData] = useState([]);
     const [update, setUpdate] = useState(true);
     const [editMode, setEditMode] = useState(false);
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         if(!update)
@@ -107,13 +106,12 @@ const MangaPage = (props) => {
                 token: props.user.token
             })
             .then(({ data }) => {
-                setShowSuccessModal(true);
+                growl.current.show({severity: 'success', summary: 'Success', detail: 'Manga updated'});
                 setData(data);
             })
             .catch(function (error) {
-                setUpdate(true);    
                 // handle error
-                setShowErrorModal(true);
+                growl.current.show({severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga'});
                 console.log(error);
                 console.log(error.message);
                 console.log(error.config);
@@ -123,26 +121,7 @@ const MangaPage = (props) => {
     return (
         data ?
         <div className={classes.Container}>
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-                open={showErrorModal}
-                onClose={x => setShowErrorModal(false)} >
-                <div className={classes.Modal}>
-                    <h2 id="simple-modal-title">Error saving Entry</h2>
-                    <p id="simple-modal-description">Data could not be saved. See console for additional details. (F12)</p>
-                </div>
-            </Modal>
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-                open={showSuccessModal}
-                onClose={x => setShowSuccessModal(false)} >
-                <div className={classes.Modal}>
-                    <h2 id="simple-modal-title">Success</h2>
-                    <p id="simple-modal-description">Changes saved.</p>
-                </div>
-            </Modal>
+            <Growl ref={growl} />
             <div className={classes.Sidebar}>
                 <img className={classes.MangaImage} src={data ? data.image : ""} alt="Cover" />
             </div>
@@ -151,8 +130,8 @@ const MangaPage = (props) => {
                     <div className={classes.Title}>{data.name}</div>
                     {props.user && props.user.role === 1 ?
                         editMode ?
-                            <Button variant="contained" color="primary" className={classes.Button} onClick={() => { setEditMode(false); updateManga() }}><SaveIcon /></Button>
-                            : <Button variant="contained" color="primary" className={classes.Button} onClick={() => setEditMode(true)} ><EditIcon /></Button>
+                            <Button label={"Save"} icon="pi pi-save" className={"button"} onClick={() => { setEditMode(false); updateManga() }}></Button>
+                            : <Button label={"Edit"} icon="pi pi-pencil" className={"button"} onClick={() => setEditMode(true)} ></Button>
                         : ""}
                 </div>
                 {editMode ? editPage() : viewPage()}

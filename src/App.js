@@ -1,33 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { Helmet } from 'react-helmet';
-import './App.css';
+
 import Navbar from './Pages/Navbar/Navbar';
 import MangaList from './Pages/MangaList/MangaList'
 import MangaPage from './Pages/MangaPage/MangaPage'
 import NewMangaPage from './Pages/NewMangaPage/NewMangaPage'
-//import MangaReleases from './Pages/MangaReleases/MangaReleases'
-import Login from './Utility/Login/Login';
-import { useCookies } from 'react-cookie';
+import ReleaseOverView from './Pages/ReleaseOverView/ReleaseOverView';
+
+import './App.css';
 
 const App = (props) => {
   const [mounted, setMounted] = useState(false);
-  const [openLogin, setOpenLogin] = useState(false);
+
   const [cookies, setCookie, deleteCookie] = useCookies(['user']);
   const [user, setUser] = useState(null);
-
   const [wrongLogin, setWrongLogin] = React.useState(false);
+  const [loggingIn, setLoggingIn] = React.useState(false);
 
-  const openLoginModal = () => {
-    setOpenLogin(true);
-  }
-
-  const closeLoginModal = () => {
-    setOpenLogin(false);
-  }
-
-  useEffect((event) => {
+  useEffect(() => {
     if (!mounted) {
       setMounted(true);
       if (cookies.user) {
@@ -37,6 +30,7 @@ const App = (props) => {
   }, [mounted, cookies.user, props]);
 
   const logIn = (username, password) => {
+    setLoggingIn(true);
     axios
       .post(
         (process.env.REACT_APP_ENDPOINT + "/api/login"), {
@@ -46,12 +40,13 @@ const App = (props) => {
       )
       .then(({ data }) => {
         if (data != null) {
+          setLoggingIn(false);
           setWrongLogin(false);
-          closeLoginModal();
           setCookie("user", data);
           setUser(data);     
         }
         else {
+          setLoggingIn(false);
           setWrongLogin(true);
         }
       });
@@ -62,9 +57,8 @@ const App = (props) => {
       .post(
         (process.env.REACT_APP_ENDPOINT + "/api/logout"), {
         token: cookies.user.token,
-      }
-      )
-      .then(({ data }) => {
+      })
+      .then(() => {
           deleteCookie("user");
           setUser(null);  
       });
@@ -79,11 +73,11 @@ const App = (props) => {
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </Helmet>
       <Router>
-        <Navbar openLogin={openLoginModal} logOut={logOut} user={user} />
+        <Navbar wrongLogin={wrongLogin} loggingIn={loggingIn} logIn={logIn} logOut={logOut} user={user} />
         <Route path="/" exact render={(props) => <MangaList {...props} user={user} />} />
-        <Route path="/manga/:id"  render={(props) => <MangaPage {...props} user={user} />} />
-        <Route path="/newmanga/"  render={(props) => <NewMangaPage {...props} user={user} />} />
-        {openLogin ? <Login closeLogin={closeLoginModal} logIn={logIn} wrongLogin={wrongLogin} /> : ""}
+        <Route path="/manga/:id" render={(props) => <MangaPage {...props} user={user} />} />
+        <Route path="/newmanga/" render={(props) => <NewMangaPage {...props} user={user} />} />
+        <Route path="/releases/" render={(props) => <ReleaseOverView {...props} user={user} />} />
       </Router>
     </div>
   );
