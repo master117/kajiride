@@ -7,9 +7,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import Modal from '@material-ui/core/Modal';
 
 const MangaPage = (props) => {
-
-    console.log(props);
-
     const viewRows = {
         Author: "author",
         Artist: "artist",
@@ -24,6 +21,7 @@ const MangaPage = (props) => {
     }
 
     const editRows = {
+        Title: "name",
         Author: "author",
         Artist: "artist",
         Publisher: "publisher",
@@ -53,7 +51,6 @@ const MangaPage = (props) => {
                 process.env.REACT_APP_ENDPOINT + "/api/manga/" + props.match.params.id
             )
             .then(({ data }) => {
-                console.log(data);
                 setData(data);
             })
             .catch(function (error) {
@@ -62,7 +59,7 @@ const MangaPage = (props) => {
                 console.log(error.message);
                 console.log(error.config);
             });
-    });
+    }, [update, props.match.params.id]);
 
     const viewPage = () => {  
         const staticPage = Object.keys(viewRows).map(key => {
@@ -79,8 +76,6 @@ const MangaPage = (props) => {
 
     const editPage = () => {
         const staticPage = Object.keys(editRows).map(key => {
-            console.log(key);
-            console.log(data[editRows[key]]);
             return (
                 <div className={classes.Row} key={key}>
                     <div className={[classes.SetField, classes.LeftColumn].join(' ')}>{key}:</div>
@@ -105,7 +100,6 @@ const MangaPage = (props) => {
     };
 
     const updateManga = () => {
-        let self = this;
         axios
             .put(
                 (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
@@ -113,7 +107,6 @@ const MangaPage = (props) => {
                 token: props.user.token
             })
             .then(({ data }) => {
-                console.log(data);
                 setShowSuccessModal(true);
                 setData(data);
             })

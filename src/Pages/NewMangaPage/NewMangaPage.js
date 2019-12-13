@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import classes from './NewMangaPage.module.css';
 import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import Modal from '@material-ui/core/Modal';
+import { withRouter } from 'react-router-dom';
 
 const NewMangaPage = (props) => {
-
-    console.log(props);
-
     const editRows = {
+        Title: "name",
         Artist: "artist",
         Publisher: "publisher",
         Owned: "ownedvolumes",
@@ -24,25 +22,10 @@ const NewMangaPage = (props) => {
     }
     
     const [data, setData] = useState([]);
-    const [editMode, setEditMode] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    useEffect(() => {
-        axios
-            .get(
-                process.env.REACT_APP_ENDPOINT + "/api/manga/" + props.match.params.id
-            )
-            .then(({ data }) => {
-                console.log(data);
-                setData(data);
-            });
-    }, []);
-
-    const editPage = () => {
+    const getPage = () => {
         const staticPage = Object.keys(editRows).map(key => {
-            console.log(key);
-            console.log(data[editRows[key]]);
             return (
                 <div className={classes.Row} key={key}>
                     <div className={[classes.SetField, classes.LeftColumn].join(' ')}>{key}:</div>
@@ -61,26 +44,12 @@ const NewMangaPage = (props) => {
             </form >
         )
     }
-    
-    const setPage = () => {  
-        const staticPage = Object.keys(editRows).map(key => {
-            return (
-                <div className={classes.Row} key={key}>
-                    <div className={[classes.SetField, classes.LeftColumn].join(' ')}>{key}:</div>
-                    <div className={[classes.SetField, classes.Column].join(' ')}>{data[editRows[key]]}</div>
-                </div>
-            )
-        })
-    
-        return staticPage;
-    }
 
     const handleChange = name => event => {
         setData({ ...data, [name]: event.target.value });
     };
 
-    const updateManga = () => {
-        let self = this;
+    const insertManga = () => {
         axios
             .post(
                 (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
@@ -89,18 +58,23 @@ const NewMangaPage = (props) => {
             }
             )
             .then(({ data }) => {
-                console.log(data);
-                if (data === true) {
-                    setShowSuccessModal(true);
+                if (data) {
+                    props.history.push('/manga/' + data.mangaid);
                 }
                 else {
                     setShowErrorModal(true);
                 }
+            })
+            .catch(function (error) {   
+                // handle error
+                setShowErrorModal(true);
+                console.log(error);
+                console.log(error.message);
+                console.log(error.config);
             });
     }
 
     return (
-        data ?
         <div className={classes.Container}>
             <Modal
                 aria-labelledby="simple-modal-title"
@@ -112,33 +86,18 @@ const NewMangaPage = (props) => {
                     <p id="simple-modal-description">Data could not be saved.</p>
                 </div>
             </Modal>
-            <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-                open={showSuccessModal}
-                onClose={x => setShowSuccessModal(false)} >
-                <div className={classes.Modal}>
-                    <h2 id="simple-modal-title">Success</h2>
-                    <p id="simple-modal-description">Changes saved.</p>
-                </div>
-            </Modal>
             <div className={classes.Sidebar}>
                 <img className={classes.MangaImage} src={data ? data.image : ""} alt="Cover" />
             </div>
             <div className={classes.MainContent}>
                 <div className={classes.TitleContainer}>
                     <div className={classes.Title}>{data.name}</div>
-                    {props.user && props.user.role === 1 ?
-                        editMode ?
-                            <Button variant="contained" color="primary" className={classes.Button} onClick={() => { setEditMode(false); updateManga() }}><SaveIcon /></Button>
-                            : <Button variant="contained" color="primary" className={classes.Button} onClick={() => setEditMode(true)} ><EditIcon /></Button>
-                        : ""}
+                    <Button variant="contained" color="primary" className={classes.Button} onClick={() => { insertManga() }}><SaveIcon /></Button>
                 </div>
-                {editMode ? editPage() : setPage()}
+                {getPage()}
             </div>
         </div>
-        : ""
     );
 };
 
-export default NewMangaPage;
+export default withRouter(NewMangaPage);

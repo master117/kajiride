@@ -9,7 +9,6 @@ class Navbar extends Component {
     }
 
     render() {
-        //console.log(this.props.user);
         return (
             <div className={classes.Navbar}>
                 <nav className={classes.Nav}>

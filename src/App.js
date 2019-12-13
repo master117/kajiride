@@ -6,7 +6,8 @@ import './App.css';
 import Navbar from './Pages/Navbar/Navbar';
 import MangaList from './Pages/MangaList/MangaList'
 import MangaPage from './Pages/MangaPage/MangaPage'
-import MangaReleases from './Pages/MangaReleases/MangaReleases'
+import NewMangaPage from './Pages/NewMangaPage/NewMangaPage'
+//import MangaReleases from './Pages/MangaReleases/MangaReleases'
 import Login from './Utility/Login/Login';
 import { useCookies } from 'react-cookie';
 
@@ -79,9 +80,9 @@ const App = (props) => {
       </Helmet>
       <Router>
         <Navbar openLogin={openLoginModal} logOut={logOut} user={user} />
-        <Route path="/" exact component={MangaList} />
+        <Route path="/" exact render={(props) => <MangaList {...props} user={user} />} />
         <Route path="/manga/:id"  render={(props) => <MangaPage {...props} user={user} />} />
-        <Route path="/releases/" component={MangaReleases} />
+        <Route path="/newmanga/"  render={(props) => <NewMangaPage {...props} user={user} />} />
         {openLogin ? <Login closeLogin={closeLoginModal} logIn={logIn} wrongLogin={wrongLogin} /> : ""}
       </Router>
     </div>
