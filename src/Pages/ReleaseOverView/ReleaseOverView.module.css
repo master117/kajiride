@@ -13,3 +13,7 @@
     min-width: 200px;  
     text-align: left;
 }
+
+.newButton {
+    margin-bottom: 20px !important;
+}

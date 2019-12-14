@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Checkbox } from 'primereact/checkbox';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { AutoComplete } from 'primereact/autocomplete';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 
 import classes from "./ReleaseEntry.module.css"
@@ -12,40 +12,45 @@ import classes from "./ReleaseEntry.module.css"
 
 const ReleaseEntry = (props) => {
 
-    let clonedRow = {}
-    const assignedData = props.data.map(y => {
-        const currentManga = props.manga.find(z => z.mangaid === y.mangaId);
-        return { release: y, manga: currentManga }
+    const assignedData = props.data.map(x => {
+        const currentManga = props.manga.find(y => y.mangaid === x.mangaId);
+        return { release: x, manga: currentManga }
     });
 
+    const mangaList = props.manga.map(x => {
+        return { ...x, name: x.name + "_" + x.language }
+    })
 
     const [data, setData] = useState();
-    const [mangaSuggestions, setMangaSuggestions] = useState(null);
+    const [clonedRows, setClonedRows] = useState([]);
 
     useEffect(() => {
         setData(assignedData);
     }, [props]);
 
     const onRowEditorValidator = (rowData) => {
-        let value = rowData['brand'];
-        return value.length > 0;
+        console.log("valid")
+        console.log(rowData)
+        return true;
     }
 
     const onRowEditInit = (event) => {
-        console.log(event);
-        clonedRow[event.data.release.releaseId] = { ...event.data };
-        console.log(clonedRow);
+        let tempClonedRows = [...clonedRows];
+        tempClonedRows[event.data.release.releaseId] = { ...event.data };
+        setClonedRows(tempClonedRows);
     }
 
     const onRowEditSave = (event) => {
+        if (!onRowEditorValidator(event.data))
+            return;
 
+        console.log("save")
+        console.log(event)
     }
 
     const onRowEditCancel = (event) => {
-        console.log(clonedRow);
         let tempData = [...data];
-        tempData[event.index] = clonedRow[event.data.release.releaseId];
-        delete clonedRow[event.data.release.releaseId];
+        tempData[event.index] = clonedRows[event.data.release.releaseId];
         setData(tempData);
     }
 
@@ -62,29 +67,23 @@ const ReleaseEntry = (props) => {
         return <div>{d.getDay() + "." + d.getMonth() + "." + d.getFullYear()}</div>;
     }
 
-    const mangaEditorComplete = (event) => {
-        let results = props.manga.filter((x) => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase());
-       });
-
-       setMangaSuggestions(results);
-    }
-
     const mangaEditor = (editorProps) => {
-        console.log("props")
-        console.log(editorProps)
-        return <AutoComplete
-            field="name"
-            dropdown={true}
-            dropdownMode={"blank"}
-            value={editorProps.rowData.manga.name}
-            onChange={(e) => {
-                let tempData = [...data];               
-            }}
-            suggestions={mangaSuggestions}
-            completeMethod={mangaEditorComplete} />;
+        return (
+            <Dropdown 
+            value={mangaList.find(x => x.mangaid === editorProps.rowData.manga.mangaid)} 
+            options={mangaList} 
+            optionLabel="name"
+            onChange={(e) => { 
+                let tempData = [...data];    
+                tempData[editorProps.rowIndex].manga = props.manga.find(x => x.mangaid === e.value.mangaid);
+                setData(tempData);
+            }} 
+            filter={true} 
+            filterBy="name,artist,author" />
+        )
     }
 
+    console.log(data);
     return (
         <DataTable value={data}
             editMode="row"
@@ -92,11 +91,11 @@ const ReleaseEntry = (props) => {
             onRowEditInit={onRowEditInit}
             onRowEditSave={onRowEditSave}
             onRowEditCancel={onRowEditCancel}>
-            {props.editable? <Column field="release.active" header="" body={activeTemplate} /> : null}
+            {props.editable ? <Column field="release.active" header="" body={activeTemplate} /> : null}
             <Column field="release.releaseDate" header="Date" body={releaseDateTemplate} />
             <Column field="manga.name" header="Name" editor={mangaEditor} />
             <Column field="release.volume" header="Volume" />
-            {props.editable? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }}></Column> : null}
+            {props.editable ? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }}></Column> : null}
         </DataTable>
     );
 }

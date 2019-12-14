@@ -46,10 +46,10 @@ const Releases = (props) => {
                 console.log(error);
                 console.log(error.message);
                 console.log(error.config);
-                if(error.response.status === 401) {
+                if (error.response.status === 401) {
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
                     props.logOut();
-                }                  
+                }
             });
     }
 
@@ -80,20 +80,18 @@ const Releases = (props) => {
     }
 
     return (
-        <div>
-            <Growl ref={growl} />
-            {props.user && props.user.role === 1 ?
-                <Button label={"New Release"} className={"button"} icon="pi pi-plus" onClick={() => setShowAddReleaseDialog(true)} />
-                : ""}
-            {releases && manga ?
-                <div className={classes.Main}>
-                    <div className={classes.Inner}>
-                        <Accordion className={classes.ReleaseAccordion} multiple={true}>
-                            {getReleaseMonths()}
-                        </Accordion>
-                    </div>
-                </div>
-                : ""}
+        <div className={classes.Main}>
+            <div className={classes.Inner}>
+                <Growl ref={growl} />
+                {props.user && props.user.role === 1 ?
+                    <Button label={"New Release"} className={classes.newButton} icon="pi pi-plus" onClick={() => setShowAddReleaseDialog(true)} />
+                    : ""}
+                {releases && manga ?
+                    <Accordion className={classes.ReleaseAccordion} multiple={true}>
+                        {getReleaseMonths()}
+                    </Accordion>
+                    : ""}
+            </div>
         </div>
     );
 }
