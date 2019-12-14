@@ -69,10 +69,14 @@ const NewMangaPage = (props) => {
             })
             .catch(function (error) {   
                 // handle error
-                growl.show({severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga'});
+                growl.show({severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga'});           
                 console.log(error);
                 console.log(error.message);
                 console.log(error.config);
+                if(error.response.status === 401) {
+                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
+                    props.logOut();
+                }    
             });
     }
 

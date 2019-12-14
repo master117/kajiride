@@ -115,6 +115,10 @@ const MangaPage = (props) => {
                 console.log(error);
                 console.log(error.message);
                 console.log(error.config);
+                if(error.response.status === 401) {
+                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
+                    props.logOut();
+                }    
             });           
     }
 

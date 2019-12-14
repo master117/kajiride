@@ -15,7 +15,7 @@ import './App.css';
 const App = (props) => {
   const [mounted, setMounted] = useState(false);
 
-  const [cookies, setCookie, deleteCookie] = useCookies(['user']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const [user, setUser] = useState(null);
   const [wrongLogin, setWrongLogin] = React.useState(false);
   const [loggingIn, setLoggingIn] = React.useState(false);
@@ -42,8 +42,8 @@ const App = (props) => {
         if (data != null) {
           setLoggingIn(false);
           setWrongLogin(false);
-          setCookie("user", data);
-          setUser(data);     
+          setCookie("user", data, { path: '/' });
+          setUser(data);
         }
         else {
           setLoggingIn(false);
@@ -58,12 +58,13 @@ const App = (props) => {
         (process.env.REACT_APP_ENDPOINT + "/api/logout"), {
         token: cookies.user.token,
       })
-      .then(() => {
-          deleteCookie("user");
-          setUser(null);  
+      .finally(() => {
+        removeCookie("user", { path: '/' });
+        console.log(cookies);
+        setUser(null);
       });
   }
-  
+
   return (
     <div className="App">
       <Helmet>
@@ -74,10 +75,10 @@ const App = (props) => {
       </Helmet>
       <Router>
         <Navbar wrongLogin={wrongLogin} loggingIn={loggingIn} logIn={logIn} logOut={logOut} user={user} />
-        <Route path="/" exact render={(props) => <MangaList {...props} user={user} />} />
-        <Route path="/manga/:id" render={(props) => <MangaPage {...props} user={user} />} />
-        <Route path="/newmanga/" render={(props) => <NewMangaPage {...props} user={user} />} />
-        <Route path="/releases/" render={(props) => <ReleaseOverView {...props} user={user} />} />
+        <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
+        <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
+        <Route path="/newmanga/" render={(props) => <NewMangaPage {...props} logOut={logOut} user={user} />} />
+        <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
       </Router>
     </div>
   );

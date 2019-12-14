@@ -1,5 +1,4 @@
 .Main {
-    
     width: 100%;
     display: flex;
     justify-content: center;
@@ -7,9 +6,10 @@
 
 .Inner {
     margin-top: 30px;
+    width: 70%;
 }
 
 .ReleaseAccordion {
-    min-width: 200px;
+    min-width: 200px;  
     text-align: left;
 }
