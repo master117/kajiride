@@ -12,20 +12,18 @@ import classes from "./ReleaseEntry.module.css"
 
 const ReleaseEntry = (props) => {
 
-    const assignedData = props.data.map(x => {
-        const currentManga = props.manga.find(y => y.mangaid === x.mangaId);
-        return { release: x, manga: currentManga }
-    });
-
     const mangaList = props.manga.map(x => {
         return { ...x, name: x.name + "_" + x.language }
     })
 
-    const [data, setData] = useState();
+    const [releaseMangaData, setReleaseMangaData] = useState();
     const [clonedRows, setClonedRows] = useState([]);
 
     useEffect(() => {
-        setData(assignedData);
+        setReleaseMangaData(props.data.map(x => { 
+            const manga = props.manga.find(y => y.mangaid === x.mangaId);
+            return { release: x, manga: manga } 
+        }));
     }, [props]);
 
     const onRowEditorValidator = (rowData) => {
@@ -36,7 +34,7 @@ const ReleaseEntry = (props) => {
 
     const onRowEditInit = (event) => {
         let tempClonedRows = [...clonedRows];
-        tempClonedRows[event.data.release.releaseId] = { ...event.data };
+        tempClonedRows[event.data.release.releaseId] = { release: {...event.data.release}, manga: {...event.data.manga} };
         setClonedRows(tempClonedRows);
     }
 
@@ -48,10 +46,10 @@ const ReleaseEntry = (props) => {
         console.log(event)
     }
 
-    const onRowEditCancel = (event) => {
-        let tempData = [...data];
+    const onRowEditCancel = (event) => {      
+        let tempData = [...releaseMangaData];
         tempData[event.index] = clonedRows[event.data.release.releaseId];
-        setData(tempData);
+        setReleaseMangaData(tempData);
     }
 
     const activeTemplate = (rowData, column) => {
@@ -74,18 +72,30 @@ const ReleaseEntry = (props) => {
             options={mangaList} 
             optionLabel="name"
             onChange={(e) => { 
-                let tempData = [...data];    
+                let tempData = [...releaseMangaData];    
                 tempData[editorProps.rowIndex].manga = props.manga.find(x => x.mangaid === e.value.mangaid);
-                setData(tempData);
+                setReleaseMangaData(tempData);
             }} 
             filter={true} 
             filterBy="name,artist,author" />
         )
     }
 
-    console.log(data);
+    const volumeEditor = (editorProps) => {
+        return (
+            <InputText 
+            value={releaseMangaData[editorProps.rowIndex].release.volume} 
+            keyfilter="int"
+            onChange={(e) => { 
+                let tempData = [...releaseMangaData];    
+                tempData[editorProps.rowIndex].release.volume = e.currentTarget.value;
+                setReleaseMangaData(tempData);
+            }} />
+        )
+    }
+
     return (
-        <DataTable value={data}
+        <DataTable value={releaseMangaData}
             editMode="row"
             rowEditorValidator={onRowEditorValidator}
             onRowEditInit={onRowEditInit}
@@ -93,8 +103,9 @@ const ReleaseEntry = (props) => {
             onRowEditCancel={onRowEditCancel}>
             {props.editable ? <Column field="release.active" header="" body={activeTemplate} /> : null}
             <Column field="release.releaseDate" header="Date" body={releaseDateTemplate} />
+            <Column field="manga.publisher" header="Publisher" />
             <Column field="manga.name" header="Name" editor={mangaEditor} />
-            <Column field="release.volume" header="Volume" />
+            <Column field="release.volume" header="Volume" editor={volumeEditor} />
             {props.editable ? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }}></Column> : null}
         </DataTable>
     );
