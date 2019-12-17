@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 
+import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -65,6 +65,22 @@ const ReleaseEntry = (props) => {
         return <div>{d.getDay() + "." + d.getMonth() + "." + d.getFullYear()}</div>;
     }
 
+    const releaseDateEditor = (editorProps) => {
+        console.log(releaseMangaData[editorProps.rowIndex].release)
+        console.log(typeof releaseMangaData[editorProps.rowIndex].release.releaseDate)
+        return (
+            <Calendar 
+            dateFormat="dd/mm/yy"
+            panelClassName={classes.Calendar}
+            value={new Date(releaseMangaData[editorProps.rowIndex].release.releaseDate)} 
+            onChange={(e) => {
+                let tempData = [...releaseMangaData];    
+                tempData[editorProps.rowIndex].release.releaseDate = e.value;
+                setReleaseMangaData(tempData);
+            }} />
+        )
+    }
+
     const mangaEditor = (editorProps) => {
         return (
             <Dropdown 
@@ -102,7 +118,7 @@ const ReleaseEntry = (props) => {
             onRowEditSave={onRowEditSave}
             onRowEditCancel={onRowEditCancel}>
             {props.editable ? <Column field="release.active" header="" body={activeTemplate} /> : null}
-            <Column field="release.releaseDate" header="Date" body={releaseDateTemplate} />
+            <Column field="release.releaseDate" header="Date" body={releaseDateTemplate} editor={releaseDateEditor} />
             <Column field="manga.publisher" header="Publisher" />
             <Column field="manga.name" header="Name" editor={mangaEditor} />
             <Column field="release.volume" header="Volume" editor={volumeEditor} />

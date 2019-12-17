@@ -1,3 +1,7 @@
 .ListEntry {
     font-size: 150%;
 }
+
+.Calendar {
+    min-width: 20em !important;
+}

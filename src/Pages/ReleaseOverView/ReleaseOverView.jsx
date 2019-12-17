@@ -3,9 +3,9 @@ import axios from 'axios';
 
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 import { Growl } from 'primereact/growl';
 
+import AddReleaseDialog from "./AddReleaseDialog/AddReleaseDialog";
 import ReleaseEntry from "./ReleaseEntry/ReleaseEntry";
 import classes from './ReleaseOverView.module.css';
 
@@ -53,6 +53,45 @@ const Releases = (props) => {
             });
     }
 
+    const addRelease = (release) => {
+        axios
+            .post(
+                (process.env.REACT_APP_ENDPOINT + "/api/release"), {
+                release: release,
+                token: props.user.token
+            })
+            .then(() => {
+                growl.current.show({ severity: 'success', summary: 'Success', detail: 'Release updated' });
+                updateData();
+            })
+            .catch(function (error) {
+                // handle error
+                growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t add Release' });
+                console.log(error);
+                console.log(error.message);
+                console.log(error.config);
+                if (error.response.status === 401) {
+                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
+                    props.logOut();
+                }
+            });
+    }
+
+    const onCloseDialog = () => {
+        setShowAddReleaseDialog(false);
+    }
+
+    const onSaveFromDialog = (date, mangaId, volume) => {
+        const release = {
+            active: true,
+            mangaId: mangaId,
+            releaseDate: date,
+            volume: volume
+        }
+        addRelease(release);
+        setShowAddReleaseDialog(false);
+    }
+
     const getReleaseMonths = () => {
         let months = {};
 
@@ -74,6 +113,8 @@ const Releases = (props) => {
         });
     }
 
+    console.log(releases)
+
     const getMonth = (release) => {
         let date = (new Date(release["releaseDate"]));
         return date.getMonth() + "-" + date.getFullYear();
@@ -83,6 +124,7 @@ const Releases = (props) => {
         <div className={classes.Main}>
             <div className={classes.Inner}>
                 <Growl ref={growl} />
+                <AddReleaseDialog visible={showAddReleaseDialog} onHide={onCloseDialog} manga={manga} onSave={onSaveFromDialog} />
                 {props.user && props.user.role === 1 ?
                     <Button label={"New Release"} className={classes.newButton} icon="pi pi-plus" onClick={() => setShowAddReleaseDialog(true)} />
                     : ""}

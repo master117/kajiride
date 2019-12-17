@@ -1,0 +1,22 @@
+.Row {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.Button {
+    margin: 10px !important;
+}
+
+.Label {
+    margin-right: 10px !important;
+}
+
+.Table {
+    text-align: left;
+}
+
+.DropdownWide {
+    width: 15.5em;
+}
