@@ -20,21 +20,19 @@ const ReleaseEntry = (props) => {
     const [clonedRows, setClonedRows] = useState([]);
 
     useEffect(() => {
-        setReleaseMangaData(props.data.map(x => { 
+        setReleaseMangaData(props.data.map(x => {
             const manga = props.manga.find(y => y.mangaid === x.mangaId);
-            return { release: x, manga: manga } 
+            return { release: x, manga: manga }
         }));
     }, [props]);
 
     const onRowEditorValidator = (rowData) => {
-        console.log("valid")
-        console.log(rowData)
         return true;
     }
 
     const onRowEditInit = (event) => {
         let tempClonedRows = [...clonedRows];
-        tempClonedRows[event.data.release.releaseId] = { release: {...event.data.release}, manga: {...event.data.manga} };
+        tempClonedRows[event.data.release.releaseId] = { release: { ...event.data.release }, manga: { ...event.data.manga } };
         setClonedRows(tempClonedRows);
     }
 
@@ -42,11 +40,10 @@ const ReleaseEntry = (props) => {
         if (!onRowEditorValidator(event.data))
             return;
 
-        console.log("save")
-        console.log(event)
+        props.onUpdate(event.data.release)
     }
 
-    const onRowEditCancel = (event) => {      
+    const onRowEditCancel = (event) => {
         let tempData = [...releaseMangaData];
         tempData[event.index] = clonedRows[event.data.release.releaseId];
         setReleaseMangaData(tempData);
@@ -62,54 +59,59 @@ const ReleaseEntry = (props) => {
 
     const releaseDateTemplate = (rowData, column) => {
         var d = new Date(rowData.release.releaseDate);
-        return <div>{d.getDay() + "." + d.getMonth() + "." + d.getFullYear()}</div>;
+        return <div>{d.toDateString()}</div>;
     }
 
     const releaseDateEditor = (editorProps) => {
-        console.log(releaseMangaData[editorProps.rowIndex].release)
-        console.log(typeof releaseMangaData[editorProps.rowIndex].release.releaseDate)
         return (
-            <Calendar 
-            dateFormat="dd/mm/yy"
-            panelClassName={classes.Calendar}
-            value={new Date(releaseMangaData[editorProps.rowIndex].release.releaseDate)} 
-            onChange={(e) => {
-                let tempData = [...releaseMangaData];    
-                tempData[editorProps.rowIndex].release.releaseDate = e.value;
-                setReleaseMangaData(tempData);
-            }} />
+            <Calendar
+                dateFormat="dd/mm/yy"
+                panelClassName={classes.Calendar}
+                value={new Date(releaseMangaData[editorProps.rowIndex].release.releaseDate)}
+                onChange={(e) => {
+                    console.log("e")
+                    console.log(e)
+                    let tempData = [...releaseMangaData];
+                    tempData[editorProps.rowIndex].release.releaseDate = getUTCDate(e.value);
+                    setReleaseMangaData(tempData);
+                }} />
         )
+    }
+
+    const getUTCDate = (date) => {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     }
 
     const mangaEditor = (editorProps) => {
         return (
-            <Dropdown 
-            value={mangaList.find(x => x.mangaid === editorProps.rowData.manga.mangaid)} 
-            options={mangaList} 
-            optionLabel="name"
-            onChange={(e) => { 
-                let tempData = [...releaseMangaData];    
-                tempData[editorProps.rowIndex].manga = props.manga.find(x => x.mangaid === e.value.mangaid);
-                setReleaseMangaData(tempData);
-            }} 
-            filter={true} 
-            filterBy="name,artist,author" />
+            <Dropdown
+                value={mangaList.find(x => x.mangaid === editorProps.rowData.manga.mangaid)}
+                options={mangaList}
+                optionLabel="name"
+                onChange={(e) => {
+                    let tempData = [...releaseMangaData];
+                    tempData[editorProps.rowIndex].manga = props.manga.find(x => x.mangaid === e.value.mangaid);
+                    setReleaseMangaData(tempData);
+                }}
+                filter={true}
+                filterBy="name,artist,author" />
         )
     }
 
     const volumeEditor = (editorProps) => {
         return (
-            <InputText 
-            value={releaseMangaData[editorProps.rowIndex].release.volume} 
-            keyfilter="int"
-            onChange={(e) => { 
-                let tempData = [...releaseMangaData];    
-                tempData[editorProps.rowIndex].release.volume = e.currentTarget.value;
-                setReleaseMangaData(tempData);
-            }} />
+            <InputText
+                value={releaseMangaData[editorProps.rowIndex].release.volume}
+                keyfilter="int"
+                onChange={(e) => {
+                    let tempData = [...releaseMangaData];
+                    tempData[editorProps.rowIndex].release.volume = e.currentTarget.value;
+                    setReleaseMangaData(tempData);
+                }} />
         )
     }
 
+    //console.log(releaseMangaData)
     return (
         <DataTable value={releaseMangaData}
             editMode="row"

@@ -1,23 +1,36 @@
 .Container {
     display: flex;
     flex-direction: column;
-    min-height: 160px;
-    padding: 10px;
+    margin-left: 10px;
     align-items: flex-start;
+    height: 180px;
+    width: 260px;
 }
 
 .Title {
     color: white;
     font-size: 150%;
+    width: 95%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .Authors {
     color: white;
     font-style: italic;
+    width: 95%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .DetailsTable {
     margin-top: 20px;
     color: white;
     text-align: left;
+    width: 95%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

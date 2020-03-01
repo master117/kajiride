@@ -30,6 +30,7 @@ const Releases = (props) => {
     }
 
     const updateRelease = (release) => {
+        console.log(release)
         axios
             .put(
                 (process.env.REACT_APP_ENDPOINT + "/api/release"), {

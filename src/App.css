@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  background-color: #1f1a24;
+  background: url(./assets/39266182_p0.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-height: 100%;
 }
 
 .App-logo {

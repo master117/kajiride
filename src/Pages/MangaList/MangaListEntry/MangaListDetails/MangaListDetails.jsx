@@ -19,8 +19,8 @@ const MangaListDetails = (props) => {
                         <td>{props.manga.genre}</td>
                     </tr>
                     <tr>
-                        <th>Owned:</th>
-                        <td>{props.manga.ownedvolumes + "/" + props.manga.totalvolumes + " | " + props.manga.status}</td>
+                        <th>Status:</th>
+                        <td>{props.manga.status}</td>
                     </tr>
                 </tbody>
             </table>

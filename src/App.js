@@ -7,7 +7,6 @@ import { Helmet } from 'react-helmet';
 import Navbar from './Pages/Navbar/Navbar';
 import MangaList from './Pages/MangaList/MangaList'
 import MangaPage from './Pages/MangaPage/MangaPage'
-import NewMangaPage from './Pages/NewMangaPage/NewMangaPage'
 import ReleaseOverView from './Pages/ReleaseOverView/ReleaseOverView';
 
 import './App.css';
@@ -18,7 +17,9 @@ const App = (props) => {
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const [user, setUser] = useState(null);
   const [wrongLogin, setWrongLogin] = React.useState(false);
-  const [loggingIn, setLoggingIn] = React.useState(false);
+  const [wrongRegister, setWrongRegister] = React.useState(false);
+  const [message, setMessage] = React.useState(undefined);
+  const [loginBusy, setLoginBusy] = React.useState(false);
 
   useEffect(() => {
     if (!mounted) {
@@ -30,7 +31,7 @@ const App = (props) => {
   }, [mounted, cookies.user, props]);
 
   const logIn = (username, password) => {
-    setLoggingIn(true);
+    setLoginBusy(true);
     axios
       .post(
         (process.env.REACT_APP_ENDPOINT + "/api/login"), {
@@ -40,13 +41,13 @@ const App = (props) => {
       )
       .then(({ data }) => {
         if (data != null) {
-          setLoggingIn(false);
+          setLoginBusy(false);
           setWrongLogin(false);
           setCookie("user", data, { path: '/' });
           setUser(data);
         }
         else {
-          setLoggingIn(false);
+          setLoginBusy(false);
           setWrongLogin(true);
         }
       });
@@ -65,6 +66,35 @@ const App = (props) => {
       });
   }
 
+  const register = (username, password) => {
+    setLoginBusy(true);
+    axios
+      .post(
+        (process.env.REACT_APP_ENDPOINT + "/api/register"), {
+        username: username,
+        password: password
+      }
+      )
+      .then(({ data }) => {
+        if (data != null) {
+          console.log(data)
+          if(data.Key) {
+            setWrongRegister(false);
+            setMessage(undefined);
+            logIn(username, password);
+          }
+          else {
+            setWrongRegister(true);
+            setMessage(data.Value);
+          }
+        }
+        else {
+          setLoginBusy(false);
+          setWrongRegister(true);
+        }
+      });
+  }
+
   return (
     <div className="App">
       <Helmet>
@@ -74,12 +104,13 @@ const App = (props) => {
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </Helmet>
       <Router>
-        <Navbar wrongLogin={wrongLogin} loggingIn={loggingIn} logIn={logIn} logOut={logOut} user={user} />
+        <Navbar {...props} loginBusy={loginBusy} wrongLogin={wrongLogin} logIn={logIn} logOut={logOut} register={register} wrongRegister={wrongRegister} message={message} user={user} />
         <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
         <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
-        <Route path="/newmanga/" render={(props) => <NewMangaPage {...props} logOut={logOut} user={user} />} />
+        <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
         <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
       </Router>
+      <div style={{position: "fixed", bottom:"0px", right:"0px", color:"white"}}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
     </div>
   );
 }

@@ -1,17 +1,33 @@
 .Container {
     display: flex;
-    width: 80%;
-    min-height: 180px;
-    padding: 10px;
-    margin: 10px 0 10px 0px;
     align-items: center;
-    background-color: #001f3f;
+    justify-content: left;
+    width: 400px;
+    min-height: 200px;
+    padding: 10px;
+    margin: 10px 10px 0px 10px;  
+    background-color: rgba(0,31,63, 0.85);
+    border-radius: 15px;
+    border: solid 2px #003264;
 }
 
 .Container:hover {
     background-color: #000825;
+    border-radius: 15px;
 }
 
 .MangaImage {
     height: 180px;
+    width: 120px;
+    border-radius: 15px;
+}
+
+@media screen and (max-width: 420px) {
+    .Container {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+
 }

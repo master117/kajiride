@@ -22,9 +22,13 @@ const Login = (props) => {
         props.logIn(values.username, values.password);
     }
 
+    const register = () => {
+        props.register(values.username, values.password);
+    }
+
     return (
         <Dialog header={"Login/Register"} visible={props.visible} modal={true} onHide={props.onHide}>
-            {props.wrongLogin ? <Message severity="warn" text="Login Failed" className={classes.LoginError} /> : ""}
+            {props.wrongLogin || props.wrongRegister ? <Message severity="warn" text={props.message ? props.message : "Login Failed"} className={classes.LoginError} /> : ""}
             <span className={classes.UsernameField + " p-float-label"}>
                 <InputText
                     id="username"
@@ -50,7 +54,8 @@ const Login = (props) => {
                     } />
                 <label htmlFor="password">Password</label>
             </span>
-            <Button label={"Login"} className={classes.Button} onClick={() => logIn()} disabled={props.loggingIn} />
+            <Button label={"Login"} className={classes.Button} onClick={() => logIn()} disabled={props.loginBusy} />
+            <Button label={"Register"} className={classes.Button} onClick={() => register()} disabled={props.loginBusy} />
         </Dialog>
     );
 };

@@ -1,24 +1,19 @@
+/* Container */
+
 .Container {
     height: 100%;
     display: flex;
     width: 100%;
     justify-content: center;
-    background-color: #2e4053;
+    flex-wrap: wrap;
 }
 
 .Sidebar {
     margin: 20px 0px 0px 0px;
     display: flex;
     flex-direction: column;
-    max-width: 25%;
-    border-right: opx solid gray;
-    border-left: 0px solid gray;
     align-items: center;
     padding: 0px 5px 5px 5px;
-}
-
-.MangaImage {
-    width: 100%;
 }
 
 .MainContent {
@@ -26,24 +21,38 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 60%;
     width: 60%;
-    padding: 10px;
-    background-color: #001f3f;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: rgba(0,31,63, 0.85);
     color: white;
 }
 
 .TitleContainer {
-    display: flex; 
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
-    justify-content: flex-start;
     align-items: flex-start;
     margin-bottom: 20px;
 }
 
+.FormContainer {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Fields */
+
+.MangaImage {
+    max-height: 300px;
+    max-width: 200px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
 .Title {
     font-size: 400%;
-    flex: 90%;
+    flex: 80%;
     text-align: left;
 }
 
@@ -53,32 +62,73 @@
     color: white !important;
 }
 
-.FormContainer {
-    width: 100%;
-}
-
-.InputField {
-    font-size: 150%;
-    margin: 5px 0px 5px 0px;
+.TextAreaField {
+    font-size: 125%;
+    margin: 15px 0px 15px 20px;
+    padding: 10px;
+    background-color: rgba(0,31,63, 0.85);
     color: white !important;
-    background: transparent;
-    border: 0px;
-    border-bottom: 1px solid black;
 }
 
 .Row {
     display: flex;
-    width: 50%;
-    justify-content: flex-start;
-    align-items: center;
 }
 
-.LeftColumn {
-    flex: 30%;   
+.FormRow {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+
+.FormButtonRow {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.Left {
+    flex: 20%;
     text-align: left;
 }
 
-.Column {
-    flex: 80%;   
+.Right {
+    flex: 80%;
     text-align: left;
+}
+
+@media screen and (max-width: 800px) {
+    .Sidebar {
+        width: 100%;
+    }
+    .TitleContainer {
+        margin-bottom: 10px;
+    }
+    .Title {
+        font-size: 200%;
+        flex: 100%;
+    }
+    .SetField {
+        font-size: 125%;
+    }
+    .TextAreaField {
+        font-size: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .Left {
+        flex: 100%;
+    }
+    .Title {
+        font-size: 100%;
+        flex: 100%;
+    }
+    .SetField {
+        font-size: 100%;
+    }
+}
+
+.WideButton {
+    width: 150px !important;
+    margin-bottom: 5px !important;
 }
