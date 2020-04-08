@@ -153,7 +153,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 </div>
                 <div className={Styles.FormRow}>
                     <span className="p-float-label">
-                        <InputText value={data.volumes ? data.volumes : ""} onChange={(e) => onMangaChange("volumes", e.currentTarget.value)} />
+                        <InputText value={data.volumes ? data.volumes : ""} keyfilter="pint" onChange={(e) => onMangaChange("volumes", parseInt(e.currentTarget.value))} />
                         <label htmlFor="in">Volumes:</label>
                     </span>
                 </div>
@@ -207,7 +207,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 </div>
                 <div className={Styles.FormRow} key={"owned"}>
                     <span className="p-float-label">
-                        <InputText value={userData.owned ? userData.owned : ""} onChange={(e) => onUserMangaDataChange("owned", e.currentTarget.value)} />
+                        <InputText value={userData.owned ? userData.owned : ""} keyfilter="pint" onChange={(e) => onUserMangaDataChange("owned", parseInt(e.currentTarget.value))} />
                         <label htmlFor="in">Owned:</label>
                     </span>
                 </div>

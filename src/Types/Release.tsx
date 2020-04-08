@@ -1,7 +1,7 @@
 export interface Release {
-    releaseId: number | null;
-    mangaId: number;
+    releaseid: number | null;
+    mangaid: number;
     volume: number;
     active: boolean;
-    releaseDate: Date;
+    releasedate: Date;
 }

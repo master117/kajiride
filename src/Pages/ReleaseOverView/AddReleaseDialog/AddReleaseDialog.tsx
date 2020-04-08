@@ -6,17 +6,31 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 
-import classes from "./AddReleaseDialog.module.css";
+import { Manga } from '../../../Types/Manga';
 
-const AddReleaseDialog = (props) => {
+import Styles from "./AddReleaseDialog.module.css";
+
+interface IAddReleaseDialogProps {
+    manga: Manga[];
+    visible: boolean;
+    initialDate: Date;
+    onHide: () => void;
+    onSave: (date: Date, mangaId: number, volume: number) => void;
+}
+
+const AddReleaseDialog: React.FunctionComponent<IAddReleaseDialogProps> = (props) => {
 
     const mangaList = props.manga ? props.manga.map(x => {
         return { ...x, name: x.name + "_" + x.language }
     }) : [];
 
-    const [date, setDate] = useState(new Date(Date.now()));
-    const [mangaId, setMangaId] = useState(null);
-    const [volume, setVolume] = useState(1);
+    const [date, setDate] = useState(props.initialDate);
+    const [mangaId, setMangaId] = useState<number>(1);
+    const [volume, setVolume] = useState<number>(1);
+
+    const getUTCDate = (date: Date) => {
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    }
 
     return (
         <Dialog
@@ -25,58 +39,61 @@ const AddReleaseDialog = (props) => {
             dismissableMask={true}
             header={"New Release"}
             closable={false} >
-            <table className={classes.Table}>
+            <table className={Styles.Table}>
                 <tbody>
                     <tr>
                         <td>
-                            <span className={classes.Label}>Release Date:</span>
+                            <span className={Styles.Label}>Release Date:</span>
                         </td>
                         <td>
                             <Calendar
+                                appendTo={document.body}
                                 dateFormat="dd/mm/yy"
-                                panelClassName={classes.Calendar}
+                                panelClassName={Styles.Calendar}
                                 value={date}
                                 onChange={(e) => {
-                                    setDate(e.value);
+                                    setDate(getUTCDate(e.value as Date));
                                 }}
-                                inputClassName={classes.DropdownWide} />
+                                inputClassName={Styles.DropdownWide} />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span className={classes.Label}>Manga:</span>
+                            <span className={Styles.Label}>Manga:</span>
                         </td>
                         <td>
                             <Dropdown
-                                value={mangaId ? mangaList.find(x => x.mangaid === mangaId) : ""}
+                                appendTo={document.body}
+                                value={mangaId}
                                 options={mangaList}
                                 optionLabel="name"
+                                optionValue="mangaid"
                                 onChange={(e) => {
-                                    setMangaId(e.value.mangaid);
+                                    setMangaId(e.value);
                                 }}
                                 filter={true}
                                 filterBy="name,artist,author"
-                                className={classes.DropdownWide} />
+                                className={Styles.DropdownWide} />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span className={classes.Label}>Manga:</span>
+                            <span className={Styles.Label}>Volume:</span>
                         </td>
                         <td>
                             <InputText
                                 value={volume}
-                                keyfilter="int"
+                                keyfilter="pint"
                                 onChange={(e) => {
-                                    setVolume(e.currentTarget.value);
+                                    setVolume(parseInt(e.currentTarget.value));
                                 }} />
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div className={classes.Row}>
-                <Button label="Save" onClick={() => props.onSave(date, mangaId, volume)} className={classes.Button} />
-                <Button label="Cancel" onClick={props.onHide} className={classes.Button} />
+            <div className={Styles.Row}>
+                <Button label="Save" disabled={!date || !mangaId || !volume} onClick={() => props.onSave(date, mangaId, volume)} className={Styles.Button} />
+                <Button label="Cancel" onClick={props.onHide} className={Styles.Button} />
             </div>
         </Dialog>
     );

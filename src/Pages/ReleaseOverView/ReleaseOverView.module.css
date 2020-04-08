@@ -1,5 +1,6 @@
 .Main {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
 }
@@ -7,6 +8,7 @@
 .Inner {
     margin-top: 30px;
     width: 70%;
+    height: 100%;
 }
 
 .ReleaseAccordion {
@@ -16,4 +18,9 @@
 
 .newButton {
     margin-bottom: 20px !important;
+}
+
+.calendarDiv {
+    height: calc(100% - 100px);
+    color: white;
 }

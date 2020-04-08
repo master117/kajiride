@@ -27,7 +27,6 @@ const MangaList = (props) => {
             axios
                 .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
                 .then(({ data }) => { 
-                    console.log(data)
                     data.sort(function(a, b) {
                         var nameA = a.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
                         var nameB = b.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
@@ -41,7 +40,6 @@ const MangaList = (props) => {
                         // names must be equal
                         return 0;
                       });
-                    console.log(data)
                     setData(data); 
                 })
                 .catch(function (error) {

@@ -61,7 +61,6 @@ const App = (props) => {
       })
       .finally(() => {
         removeCookie("user", { path: '/' });
-        console.log(cookies);
         setUser(null);
       });
   }
@@ -77,7 +76,6 @@ const App = (props) => {
       )
       .then(({ data }) => {
         if (data != null) {
-          console.log(data)
           if(data.Key) {
             setWrongRegister(false);
             setMessage(undefined);

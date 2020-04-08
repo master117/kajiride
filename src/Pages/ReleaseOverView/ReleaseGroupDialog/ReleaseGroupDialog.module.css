@@ -5,3 +5,7 @@
 .Calendar {
     min-width: 20em !important;
 }
+
+.Dialog {
+    width: 70%;
+}
