@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+import { Button } from "primereact/button";
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Dialog } from "primereact/dialog";
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 
@@ -12,7 +14,7 @@ import { Release } from "../../../Types/Release";
 import { User } from "../../../Types/User";
 
 import Styles from "./ReleaseGroupDialog.module.css"
-import { Dialog } from "primereact/dialog";
+
 
 interface IReleaseGroupProps {
     user: User;
@@ -22,6 +24,7 @@ interface IReleaseGroupProps {
     visible: boolean;
 
     onUpdate: (release: Release) => void;
+    onDelete: (release: Release) => void;
     onHide: () => void;
 }
 
@@ -91,6 +94,10 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
         )
     }
 
+    const deleteTemplate = (rowData: any, column: any) => {
+        return <Button icon={"pi pi-trash"} onClick={e => props.onDelete(rowData.release as Release)} />;
+    }
+
     const getUTCDate = (date: Date) => {
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     }
@@ -146,7 +153,8 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
                 <Column field="manga.publisher" header="Publisher" />
                 <Column field="manga.name" header="Name" editor={mangaEditor} />
                 <Column field="release.volume" header="Volume" editor={volumeEditor} />
-                {props.editable ? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }}></Column> : null}
+                {props.editable ? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }} /> : null}
+                {props.editable ? <Column field="release.active" header="" body={deleteTemplate} /> : null}
             </DataTable>
         </Dialog >
     );

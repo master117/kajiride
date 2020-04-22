@@ -1,3 +1,10 @@
+.Row {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .LoginError {
     margin-bottom: 20px !important;
 }

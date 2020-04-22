@@ -112,6 +112,33 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
             });
     }
 
+    const deleteRelease = (release: Release) => {
+        console.log(release)
+        axios
+            .delete(
+                (process.env.REACT_APP_ENDPOINT + "/api/release"), {
+                data: { releaseid: release.releaseid, token: props.user.token },
+            })
+            .then(() => {
+                if (growl && growl.current)
+                    growl.current.show({ severity: 'success', summary: 'Success', detail: 'Release deleted' });
+                updateData();
+            })
+            .catch(function (error) {
+                // handle error
+                if (growl && growl.current)
+                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t delete Release' });
+                console.log(error);
+                console.log(error.message);
+                console.log(error.config);
+                if (error.response.status === 401) {
+                    if (growl && growl.current)
+                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
+                    props.logOut();
+                }
+            });
+    }
+
     //////////////////
     /// UI EVENTS
     //////////////////
@@ -185,7 +212,9 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
             editable={props.user && props.user.role === 1}
             visible={Boolean(editReleaseDialogData)}
             onHide={() => setEditReleaseDialogData(null)}
-            onUpdate={updateRelease} />;
+            onUpdate={updateRelease}
+            onDelete={deleteRelease}
+        />;
     }
 
     const equalDates = (date1: Date, date2: Date): boolean => {
@@ -224,7 +253,7 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                         showNonCurrentDates={false}
                         eventRender={info => {
                             //if(info.el && info.el.firstChild)
-                                //(info.el.firstChild as any).innerText = "Text Overwrite";
+                            //(info.el.firstChild as any).innerText = "Text Overwrite";
                             return info.el
                         }}
                         //Style

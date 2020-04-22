@@ -1,11 +1,11 @@
 import React from "react";
-import classes from './Login.module.css';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
 
+import Styles from './Login.module.css';
 
 const Login = (props) => {
     const [values, setValues] = React.useState({
@@ -28,8 +28,8 @@ const Login = (props) => {
 
     return (
         <Dialog header={"Login/Register"} visible={props.visible} modal={true} onHide={props.onHide}>
-            {props.wrongLogin || props.wrongRegister ? <Message severity="warn" text={props.message ? props.message : "Login Failed"} className={classes.LoginError} /> : ""}
-            <span className={classes.UsernameField + " p-float-label"}>
+            {props.wrongLogin || props.wrongRegister ? <Message severity="warn" text={props.message ? props.message : "Login Failed"} className={Styles.LoginError} /> : ""}
+            <span className={Styles.UsernameField + " p-float-label"}>
                 <InputText
                     id="username"
                     value={values.username}
@@ -37,7 +37,7 @@ const Login = (props) => {
                     disabled={props.loggingIn} />
                 <label htmlFor="username">Username</label>
             </span>
-            <span className={classes.PasswordField + " p-float-label"}>
+            <span className={Styles.PasswordField + " p-float-label"}>
                 <InputText
                     id="password"
                     type="password"
@@ -54,8 +54,10 @@ const Login = (props) => {
                     } />
                 <label htmlFor="password">Password</label>
             </span>
-            <Button label={"Login"} className={classes.Button} onClick={() => logIn()} disabled={props.loginBusy} />
-            <Button label={"Register"} className={classes.Button} onClick={() => register()} disabled={props.loginBusy} />
+            <div className={Styles.Row}>
+                <Button label={"Login"} className={Styles.Button} onClick={() => logIn()} disabled={props.loginBusy} />
+                <Button label={"Register"} className={Styles.Button} onClick={() => register()} disabled={props.loginBusy} />
+            </div>
         </Dialog>
     );
 };
