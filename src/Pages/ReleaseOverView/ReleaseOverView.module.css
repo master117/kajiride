@@ -21,6 +21,6 @@
 }
 
 .calendarDiv {
-    height: calc(100% - 100px);
+    height: 600px;
     color: white;
 }

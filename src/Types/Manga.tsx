@@ -26,14 +26,39 @@ export enum Publisher {
     Other = "Other",
 }
 
+export const getColorFromPublisher = (publisher: Publisher): string => {
+    switch (publisher) {
+        case Publisher.altraverse:
+            return "#009de0";            
+        case Publisher.Carlsen:
+            return "#24921f";          
+        case Publisher.Egmont:
+            return "#ffed00";         
+        case Publisher.Kaze:
+            return "#b80000";          
+        case Publisher.MangaCult:
+            return "#b80000";         
+        case Publisher.SevenSeas:
+            return "#";           
+        case Publisher.Tokyopop:
+            return "b80000";           
+        case Publisher.VizMedia:
+            return "#";            
+        case Publisher.YenPress:
+            return "#";           
+        case Publisher.Other:
+            return "#";           
+    }
+}
+
 export enum Status {
-    releasing = "releasing", 
+    releasing = "releasing",
     finished = "finished",
 }
 
 export enum Language {
-    de = "de", 
-    en = "en", 
+    de = "de",
+    en = "en",
     jp = "jp",
 }
 

@@ -11,7 +11,7 @@ import { Growl } from 'primereact/growl';
 import AddReleaseDialog from "./AddReleaseDialog/AddReleaseDialog";
 import ReleaseGroupDialog from "./ReleaseGroupDialog/ReleaseGroupDialog";
 
-import { Manga } from "../../Types/Manga";
+import { Manga, getColorFromPublisher } from "../../Types/Manga";
 import { Release } from "../../Types/Release";
 import { User, Role } from "../../Types/User";
 
@@ -33,7 +33,7 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
 
     useEffect(() => {
         updateData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     //////////////////
@@ -151,6 +151,9 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                     allDay: true,
                     start: releases[i].releasedate,
                     title: currManga.publisher,
+                    backgroundColor: getColorFromPublisher(currManga.publisher),
+                    borderColor: "transparent",
+                    textColor: "white",
                     publisher: currManga.publisher,
                 }
 
@@ -212,12 +215,18 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                         defaultView="dayGridMonth"
                         plugins={[dayGridPlugin, interactionPlugin]}
                         //Look
-                        weekends={false}
+                        weekends={true}
+                        firstDay={1}
                         locale={"de"}
                         weekNumbers={true}
                         weekLabel={"KW"}
                         fixedWeekCount={false}
                         showNonCurrentDates={false}
+                        eventRender={info => {
+                            //if(info.el && info.el.firstChild)
+                                //(info.el.firstChild as any).innerText = "Text Overwrite";
+                            return info.el
+                        }}
                         //Style
                         height={"parent"}
                         //Data

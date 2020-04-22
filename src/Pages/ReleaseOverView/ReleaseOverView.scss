@@ -1,2 +1,18 @@
 @import '~@fullcalendar/core/main.css';
 @import '~@fullcalendar/daygrid/main.css';
+
+.fc td {
+    background-color: rgba($color: rgb(54, 54, 58), $alpha: 0.5);
+}
+
+.fc-unthemed .fc-disabled-day {
+    background-color: transparent;
+}
+
+.fc-unthemed td.fc-today {
+    background-color: rgba($color: rgb(100, 100, 100), $alpha: 0.7);
+}
+
+.fc th {
+    vertical-align: middle;
+}
