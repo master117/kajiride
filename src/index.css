@@ -15,3 +15,9 @@ code {
 html, body, #root  {
   height: 100%;
 }
+
+.normal.p-button {
+  background-color: transparent;
+  border: 0px;
+  color: black;
+}

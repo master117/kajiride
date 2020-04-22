@@ -95,7 +95,7 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
     }
 
     const deleteTemplate = (rowData: any, column: any) => {
-        return <Button icon={"pi pi-trash"} onClick={e => props.onDelete(rowData.release as Release)} />;
+        return <Button icon={"pi pi-trash"} onClick={e => props.onDelete(rowData.release as Release)} className={"normal"} />;
     }
 
     const getUTCDate = (date: Date) => {
@@ -148,13 +148,33 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
                 onRowEditInit={onRowEditInit}
                 onRowEditSave={onRowEditSave}
                 onRowEditCancel={onRowEditCancel}>
-                {props.editable ? <Column field="release.active" header="" body={activeTemplate} /> : null}
+                {props.editable ? <Column field="release.active" header="" body={activeTemplate} style={{
+                    'width': '40px',
+                    'textAlign': 'center',
+                    "padding-left": "0px",
+                    "padding-right": "0px",
+                }}
+                /> : null}
                 <Column field="release.releasedate" header="Date" body={releaseDateTemplate} editor={releaseDateEditor} />
                 <Column field="manga.publisher" header="Publisher" />
                 <Column field="manga.name" header="Name" editor={mangaEditor} />
                 <Column field="release.volume" header="Volume" editor={volumeEditor} />
-                {props.editable ? <Column rowEditor={true} style={{ 'width': '70px', 'textAlign': 'center' }} /> : null}
-                {props.editable ? <Column field="release.active" header="" body={deleteTemplate} /> : null}
+                {props.editable ? <Column rowEditor={true} style={{
+                    'width': '40px',
+                    'textAlign': 'center',
+                    "border-right": "0px",
+                    "padding-left": "0px",
+                    "padding-right": "0px",
+                }}
+                /> : null}
+                {props.editable ? <Column field="release.active" header="" body={deleteTemplate} style={{
+                    'width': '40px',
+                    'textAlign': 'center',
+                    "border-left": "0px",
+                    "padding-left": "0px",
+                    "padding-right": "0px",
+                }} 
+                /> : null}
             </DataTable>
         </Dialog >
     );
