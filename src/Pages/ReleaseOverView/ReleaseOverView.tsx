@@ -153,7 +153,7 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                     title: currManga.publisher,
                     backgroundColor: getColorFromPublisher(currManga.publisher),
                     borderColor: "transparent",
-                    textColor: "white",
+                    textColor: "black",
                     publisher: currManga.publisher,
                 }
 
