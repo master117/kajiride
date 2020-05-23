@@ -8,6 +8,7 @@ import Navbar from './Pages/Navbar/Navbar';
 import MangaList from './Pages/MangaList/MangaList'
 import MangaPage from './Pages/MangaPage/MangaPage'
 import ReleaseOverView from './Pages/ReleaseOverView/ReleaseOverView';
+import UserProfile from './Pages/UserProfile/UserProfile';
 
 import './App.css';
 
@@ -107,6 +108,7 @@ const App = (props) => {
         <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
         <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
         <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
+        <Route path="/user/" render={(props) => <UserProfile {...props} user={user} />} />
       </Router>
       <div style={{position: "fixed", bottom:"0px", right:"0px", color:"white"}}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
     </div>

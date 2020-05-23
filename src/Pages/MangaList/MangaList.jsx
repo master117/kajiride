@@ -26,21 +26,21 @@ const MangaList = (props) => {
         if (data.length === 0) {
             axios
                 .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
-                .then(({ data }) => { 
-                    data.sort(function(a, b) {
+                .then(({ data }) => {
+                    data.sort(function (a, b) {
                         var nameA = a.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
                         var nameB = b.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
                         if (nameA < nameB) {
-                          return -1;
+                            return -1;
                         }
                         if (nameA > nameB) {
-                          return 1;
+                            return 1;
                         }
-                      
+
                         // names must be equal
                         return 0;
-                      });
-                    setData(data); 
+                    });
+                    setData(data);
                 })
                 .catch(function (error) {
                     // handle error
@@ -68,7 +68,10 @@ const MangaList = (props) => {
         <div className={classes.Container}>
             <Growl ref={growl} />
             <div className={classes.Inner}>
-                {props.user && props.user.role === 1 ? <div style={{width: "100%"}}><Button label={"New Manga"} className={"button"} icon="pi pi-plus" onClick={() => props.history.push('/newmanga/')} /></div>
+                {props.user && props.user.role === 1 ?
+                    <div style={{ width: "100%" }}>
+                        <Button label={"New Manga"} className={"button"} icon="pi pi-plus" onClick={() => props.history.push('/newmanga/')} />
+                    </div>
                     : ""}
                 {returnData}
             </div>

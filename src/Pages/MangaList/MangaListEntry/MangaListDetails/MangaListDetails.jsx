@@ -1,9 +1,7 @@
 import React from 'react';
 import classes from './MangaListDetails.module.css';
 
-
 const MangaListDetails = (props) => {  
-
     return (
         <div className={classes.Container}>
             <div className={classes.Title}>{props.manga.name}</div>
