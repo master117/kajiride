@@ -19,7 +19,7 @@ import './ReleaseOverView.scss';
 import Styles from './ReleaseOverView.module.css';
 
 interface IReleaseOverviewProps {
-    user: User;
+    user: User | null;
     logOut: () => void;
 }
 
@@ -58,7 +58,9 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
     }
 
     const updateRelease = (release: Release) => {
-        console.log(release)
+        if (!props.user)
+            return;
+
         axios
             .put(
                 (process.env.REACT_APP_ENDPOINT + "/api/release"), {
@@ -74,18 +76,13 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                 // handle error
                 if (growl && growl.current)
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Release' });
-                console.log(error);
-                console.log(error.message);
-                console.log(error.config);
-                if (error.response.status === 401) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                    props.logOut();
-                }
             });
     }
 
     const addRelease = (release: Release) => {
+        if (!props.user)
+            return;
+
         axios
             .post(
                 (process.env.REACT_APP_ENDPOINT + "/api/release"), {
@@ -101,19 +98,13 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                 // handle error
                 if (growl && growl.current)
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t add Release' });
-                console.log(error);
-                console.log(error.message);
-                console.log(error.config);
-                if (error.response.status === 401) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                    props.logOut();
-                }
             });
     }
 
     const deleteRelease = (release: Release) => {
-        console.log(release)
+        if (!props.user)
+            return;
+
         axios
             .delete(
                 (process.env.REACT_APP_ENDPOINT + "/api/release"), {
@@ -128,14 +119,6 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                 // handle error
                 if (growl && growl.current)
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t delete Release' });
-                console.log(error);
-                console.log(error.message);
-                console.log(error.config);
-                if (error.response.status === 401) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                    props.logOut();
-                }
             });
     }
 
@@ -192,7 +175,7 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
     }
 
     const getReleaseEntry = (): JSX.Element => {
-        if (!editReleaseDialogData)
+        if (!props.user || !editReleaseDialogData)
             return <div></div>;
 
         const currReleases = releases.filter(x => {

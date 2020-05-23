@@ -17,7 +17,7 @@ import { Dropdown } from 'primereact/dropdown';
 type TParams = { id: string };
 
 interface IMangaPageProps extends RouteComponentProps<TParams> {
-    user: User;
+    user: User | null;
     logOut: () => void;
 }
 
@@ -68,15 +68,6 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                             setUserData(data);
                     })
                     .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                        console.log(error.message);
-                        console.log(error.config);
-                        if (error.response.status === 401) {
-                            if (growl && growl.current)
-                                growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                            props.logOut();
-                        }
                     });
             }
         }
@@ -101,15 +92,6 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                         setUserData(data);
                 })
                 .catch(function (error) {
-                    // handle error
-                    console.log(error);
-                    console.log(error.message);
-                    console.log(error.config);
-                    if (error.response.status === 401) {
-                        if (growl && growl.current)
-                            growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                        props.logOut();
-                    }
                 });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -234,6 +216,9 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
     };
 
     const updateManga = () => {
+        if (!props.user)
+            return;
+
         axios
             .put(
                 (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
@@ -249,18 +234,13 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 // handle error
                 if (growl && growl.current)
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
-                console.log(error);
-                console.log(error.message);
-                console.log(error.config);
-                if (error.response.status === 401) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                    props.logOut();
-                }
             });
     }
 
     const updateUserManga = () => {
+        if (!props.user)
+            return;
+
         if (userData.userid && userData.mangaid) {
             axios
                 .put(
@@ -277,14 +257,6 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                     // handle error
                     if (growl && growl.current)
                         growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
-                    console.log(error);
-                    console.log(error.message);
-                    console.log(error.config);
-                    if (error.response.status === 401) {
-                        if (growl && growl.current)
-                            growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                        props.logOut();
-                    }
                 });
         }
         else {
@@ -305,19 +277,14 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                     // handle error
                     if (growl && growl.current)
                         growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
-                    console.log(error);
-                    console.log(error.message);
-                    console.log(error.config);
-                    if (error.response.status === 401) {
-                        if (growl && growl.current)
-                            growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                        props.logOut();
-                    }
                 });
         }
     }
 
     const insertManga = () => {
+        if (!props.user)
+            return;
+            
         axios
             .post(
                 (process.env.REACT_APP_ENDPOINT + "/api/manga"), {
@@ -340,14 +307,6 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 // handle error
                 if (growl && growl.current)
                     growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga' });
-                console.log(error);
-                console.log(error.message);
-                console.log(error.config);
-                if (error.response.status === 401) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
-                    props.logOut();
-                }
             });
     }
 

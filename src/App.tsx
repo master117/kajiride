@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+
+import { Growl } from 'primereact/growl';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { Helmet } from 'react-helmet';
@@ -12,7 +14,9 @@ import UserProfile from './Pages/UserProfile/UserProfile';
 
 import './App.css';
 
-const App = (props) => {
+const App = (props: any) => {
+  const growl = useRef<Growl>(null);
+
   const [mounted, setMounted] = useState(false);
 
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
@@ -31,7 +35,7 @@ const App = (props) => {
     }
   }, [mounted, cookies.user, props]);
 
-  const logIn = (username, password) => {
+  const logIn = (username: string, password: string) => {
     setLoginBusy(true);
     axios
       .post(
@@ -66,7 +70,7 @@ const App = (props) => {
       });
   }
 
-  const register = (username, password) => {
+  const register = (username: string, password: string) => {
     setLoginBusy(true);
     axios
       .post(
@@ -77,7 +81,7 @@ const App = (props) => {
       )
       .then(({ data }) => {
         if (data != null) {
-          if(data.Key) {
+          if (data.Key) {
             setWrongRegister(false);
             setMessage(undefined);
             logIn(username, password);
@@ -94,8 +98,29 @@ const App = (props) => {
       });
   }
 
+  // Add a response interceptor, mostly to watch errors
+  axios.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    return response;
+  }, function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Log error
+    console.log(error);
+    console.log(error.message);
+    console.log(error.config);
+    // 401 = Unauthorized => LogOut
+    if (error.response.status === 401) {
+      if (growl && growl.current)
+        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
+      logOut();
+    }
+
+    return Promise.reject(error);
+  });
+
   return (
     <div className="App">
+      <Growl ref={growl} />
       <Helmet>
         <title>Kajiri.de</title>
         <script src="https://kit.fontawesome.com/0e0dccff56.js"></script>
@@ -110,7 +135,7 @@ const App = (props) => {
         <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
         <Route path="/user/" render={(props) => <UserProfile {...props} user={user} />} />
       </Router>
-      <div style={{position: "fixed", bottom:"0px", right:"0px", color:"white"}}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
+      <div style={{ position: "fixed", bottom: "0px", right: "0px", color: "white" }}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
     </div>
   );
 }
