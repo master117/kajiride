@@ -38,7 +38,7 @@ const Navbar = (props) => {
                 </div>
             </nav>
             <div className={classes.Right}>
-                {props.user ? <div className={classes.Greeting}>{props.user.name}</div> : ""}
+                {props.user ? <div className={classes.Greeting} onClick={() => props.history.push("/user")}>{props.user.name}</div> : ""}
                 <Searchbar />
                 {props.user ?
                     <Button label={"Logout"} className={classes.Button} onClick={props.logOut} />

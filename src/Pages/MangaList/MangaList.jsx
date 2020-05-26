@@ -44,9 +44,6 @@ const MangaList = (props) => {
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
-                    console.log(error.message);
-                    console.log(error.config);
                     growl.current.show({ severity: 'error', summary: 'Error Loading Data', detail: error.message });
                 });
         }

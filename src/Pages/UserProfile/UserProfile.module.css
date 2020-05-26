@@ -1,3 +1,93 @@
-.container {
-    
+.Container {
+    height: 100%; 
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.MainContent {
+    margin: 20px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+    width: 80%;  
+    border-radius: 15px;
+    background-color: rgba(0,31,63, 0.85);
+    color: white;
+}
+
+.Chips {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    width: 80%;  
+}
+
+.Chip {
+    margin: 20px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    background-color: rgba(0,31,63, 0.85);
+    color: white;
+    min-width: 60%; 
+}
+
+.FormContainer {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.TitleContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.Title {
+    font-size: 400%;
+    flex: 80%;
+    text-align: left;
+}
+
+.Row {
+    display: flex;
+}
+
+.NamesContainer {
+    color: white;
+    font-weight: bold;
+    width: 80%;
+    display: flex;
+    margin-top: 10px;
+}
+
+.NamePlate {
+    padding: 5px 10px;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.ChartContainer {
+    color: #050624;
+    width: 95%;
+    height: 15px;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.LeftChart {
+    border-radius: 5px 0px 0px 5px;
+}
+
+.RightChart {
+    border-radius: 0px 5px 5px 0px;
 }

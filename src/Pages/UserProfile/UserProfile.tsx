@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import { withRouter, RouteComponentProps } from "react-router";
 
+import { Publisher, Manga, getColorFromPublisher, Genre, getColorFromGenre } from "../../Types/Manga";
+import { Stats } from "../../Types/Stats";
 import { UserManga } from "../../Types/UserManga";
 import { User } from "../../Types/User";
 
@@ -13,6 +15,7 @@ interface IUserProfile extends RouteComponentProps {
 }
 
 const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
+    const [mangas, setMangas] = useState<Manga[]>([]);
     const [userMangas, setUserMangas] = useState<UserManga[]>([]);
 
     useEffect(() => {
@@ -23,6 +26,11 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         }
 
         axios
+            .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
+            .then(({ data }) => { setMangas(data); })
+            .catch(function (error) { });
+
+        axios
             .get(process.env.REACT_APP_ENDPOINT + "/api/usermanga/", {
                 params: { userId: props.user.id, token: props.user.token, }
             })
@@ -30,22 +38,296 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                 if (data)
                     setUserMangas(data);
             })
-            .catch(function (error) {
-            });
+            .catch(function (error) { });
+
     }, [props.history, props.user]);
 
+    // Get total amount of different mangas
+    function getTotalManga(): JSX.Element {
+        return <div>{userMangas.length}</div>;
+    }
+
+    // Get total amout of volumes of all mangas 
+    function getTotalMangaVolumes(): JSX.Element {
+        var totalVolumes = 0;
+        var userMangasIndex = 0;
+
+        while (userMangasIndex < userMangas.length) {
+            var userManga = userMangas[userMangasIndex];
+            if (userManga.owned) {
+                totalVolumes += userManga.owned;
+            }
+
+            userMangasIndex++;
+        }
+
+        return <div>{totalVolumes}</div>;
+    }
+
+    function getPublisherData(): Stats[] {
+        let statsArray: Stats[] = [];
+
+        statsArray.push({ name: Publisher.altraverse, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.Carlsen, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.Egmont, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.Kaze, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.MangaCult, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.SevenSeas, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.Tokyopop, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.VizMedia, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.YenPress, count: 0, percent: 0 });
+        statsArray.push({ name: Publisher.Other, count: 0, percent: 0 });
+
+        var totalAssigned = 0;
+
+        for (let i = 0; i < userMangas.length; i++) {
+            const userManga = userMangas[i];
+            const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
+
+            if (manga) {
+                const stats = statsArray.find(entry => entry.name === manga.publisher);
+
+                if (stats) {
+                    totalAssigned++;
+                    stats.count++;
+                }
+            }
+        }
+
+        for (let i = 0; i < statsArray.length; i++) {
+            const stats = statsArray[i];
+            stats.percent = stats.count / totalAssigned;
+        }
+
+        console.log(statsArray);
+
+        for (let i = 0; i < statsArray.length; i++) {
+            var maxIndex = i;
+            var max = 0;
+
+            for (let j = i; j < statsArray.length; j++) {
+                var stats = statsArray[j];
+                if (stats.count > max) {
+                    max = stats.count;
+                    maxIndex = j;
+                }
+            }
+
+            var temp = statsArray[i];
+            statsArray[i] = statsArray[maxIndex];
+            statsArray[maxIndex] = temp;
+        }
+
+        console.log(statsArray);
+
+        return statsArray;
+    }
+
+    function getGenreData(): Stats[] {
+        let statsArray: Stats[] = [];
+
+        statsArray.push({ name: Genre.Action, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Adventure, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Comedy, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Drama, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Fantasy, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Horror, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Isekai, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Mystery, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Shojo, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.SliceOfLife, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Yuri, count: 0, percent: 0 });
+
+        var totalAssigned = 0;
+
+        for (let i = 0; i < userMangas.length; i++) {
+            const userManga = userMangas[i];
+            const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
+
+            if (manga) {
+                const stats = statsArray.find(entry => entry.name === manga.genre);
+
+                if (stats) {
+                    totalAssigned++;
+                    stats.count++;
+                }
+            }
+        }
+
+        for (let i = 0; i < statsArray.length; i++) {
+            const stats = statsArray[i];
+            stats.percent = stats.count / totalAssigned;
+        }
+
+        console.log(statsArray);
+
+        for (let i = 0; i < statsArray.length; i++) {
+            var maxIndex = i;
+            var max = 0;
+
+            for (let j = i; j < statsArray.length; j++) {
+                var stats = statsArray[j];
+                if (stats.count > max) {
+                    max = stats.count;
+                    maxIndex = j;
+                }
+            }
+
+            var temp = statsArray[i];
+            statsArray[i] = statsArray[maxIndex];
+            statsArray[maxIndex] = temp;
+        }
+
+        console.log(statsArray);
+
+        return statsArray;
+    }
+
+    function getPublisherNames(): JSX.Element {
+        const statsArray = getPublisherData();
+        const cutArray = [];
+
+        for (let i = 0; i < 5; i++) {
+            const element = statsArray[i];
+            cutArray.push(element);
+        }
+
+        return (
+            <div className={Styles.NamesContainer}>
+                {cutArray.map(stats => {
+                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
+                    return (
+                        <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
+                            {stats.count + " in " + stats.name}
+                        </div>
+                    );
+                })}
+            </div>
+        )
+    }
+
+    function getPublisherChart(): JSX.Element {
+        const statsArray = getPublisherData();
+
+        return (
+            <div className={Styles.ChartContainer}>
+                {statsArray.map((stats, i) => {
+                    const percent = stats.percent * 100;
+                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
+
+                    let extraStyle = undefined;
+                    if (i === 0) {
+                        extraStyle = Styles.LeftChart;
+                    }
+
+                    if (i === statsArray.length - 1) {
+                        extraStyle = Styles.RightChart;
+                    }
+
+                    return (
+                        <div style={{ width: percent + "%", backgroundColor: backGroundColor }} key={stats.name} className={extraStyle + " tooltip"}>
+                            <span className={"tooltiptext"}>{stats.name}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        )
+    }
+
+    function getGenreNames(): JSX.Element {
+        const statsArray = getGenreData();
+        const cutArray = [];
+
+        for (let i = 0; i < 5; i++) {
+            const element = statsArray[i];
+            cutArray.push(element);
+        }
+
+        return (
+            <div className={Styles.NamesContainer}>
+                {cutArray.map(stats => {
+                    const backGroundColor = getColorFromGenre(stats.name as Genre);
+                    return (
+                        <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
+                            {stats.count + " in " + stats.name}
+                        </div>
+                    );
+                })}
+            </div>
+        )
+    }
+
+    function getGenreChart(): JSX.Element {
+        const statsArray = getGenreData();
+
+        return (
+            <div className={Styles.ChartContainer}>
+                {statsArray.map((stats, i) => {
+                    const percent = stats.percent * 100;
+                    const backGroundColor = getColorFromGenre(stats.name as Genre);
+
+                    let extraStyle = undefined;
+                    if (i === 0) {
+                        extraStyle = Styles.LeftChart;
+                    }
+
+                    if (i === statsArray.length - 1) {
+                        extraStyle = Styles.RightChart;
+                    }
+
+                    return (
+                        <div style={{ width: percent + "%", backgroundColor: backGroundColor }} key={stats.name} className={extraStyle + " tooltip"}>
+                            <span className={"tooltiptext"}>{stats.name}</span>
+                        </div>
+                    );
+                })}
+            </div>
+        )
+    }
+
+    console.log("---------------------------------");
+    console.log(props.user);
     console.log(userMangas);
+    console.log(mangas);
+
     return (
-        <div className={Styles.container}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In quam lorem, convallis sit amet eleifend quis, fermentum vitae mi. Ut porttitor tristique volutpat. Morbi nec ligula eu felis interdum scelerisque. Nullam non semper velit. Vestibulum consequat, arcu ut porttitor rutrum, ligula magna commodo sapien, a placerat dolor ante eget dolor. Nulla tempor eros eu sem ultricies, ut cursus velit imperdiet. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <div className={Styles.Container}>
+            <div className={Styles.MainContent}>
+                <div className={Styles.TitleContainer}>
+                    <div className={Styles.Title}>
+                        User Statistics
+                    </div>
+                </div>
+                <div className={Styles.FormContainer}>
+                    <div className={Styles.Row}>
+                        <div className={Styles.Left}>
+                            Total manga:
+                        </div>
+                        <div className={Styles.Right}>
+                            {getTotalManga()}
+                        </div>
+                    </div>
+                    <div className={Styles.Row}>
+                        <div className={Styles.Left}>
+                            Total manga volumes:
+                        </div>
+                        <div className={Styles.Right}>
+                            {getTotalMangaVolumes()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={Styles.Chips}>
 
-            Sed lobortis magna quis mauris rutrum, vitae venenatis elit fringilla. Vivamus dictum odio bibendum ex finibus luctus. Aliquam pretium risus non metus mattis, et finibus dui aliquam. Donec fringilla quam sit amet efficitur convallis. Suspendisse potenti. Aliquam risus dui, varius rhoncus nisi nec, dapibus venenatis velit. Duis non nisi sapien.
-
-            Morbi eu sem a metus ullamcorper bibendum non a ex. Mauris pulvinar, quam ac rutrum auctor, sapien erat dictum ipsum, nec sollicitudin arcu dui sit amet nisl. Maecenas dignissim dolor libero. Nam ut varius nisi. Phasellus interdum iaculis ex, eget pharetra nisi pulvinar vel. Nunc eleifend et magna sit amet facilisis. Phasellus dignissim arcu sit amet sem rutrum, nec varius nisl ultricies. Donec ac nisl eget elit rhoncus euismod.
-
-            Nam faucibus semper ante eu cursus. Fusce viverra sollicitudin sem, et vestibulum orci interdum in. Maecenas eget ex sed augue eleifend vulputate a quis leo. Nullam commodo feugiat lectus laoreet mattis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam rutrum magna velit, at vulputate lectus sollicitudin et. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam fermentum diam ac augue laoreet, mollis cursus dui iaculis. Quisque faucibus quis metus vel condimentum. Pellentesque mattis purus non lorem pharetra ultricies. Nulla id facilisis diam, eget tincidunt ligula. Aenean eleifend risus mi, vel volutpat ante tincidunt et. Maecenas est diam, faucibus blandit risus pulvinar, aliquet fermentum ligula. Nulla facilisi. Nam nec metus imperdiet, luctus ligula quis, rutrum erat.
-
-            Mauris feugiat velit sit amet urna aliquet consequat.
+                <div className={Styles.Chip}>
+                    {getPublisherNames()}
+                    {getPublisherChart()}
+                </div>
+                <div className={Styles.Chip}>
+                    {getGenreNames()}
+                    {getGenreChart()}
+                </div>
+            </div>
         </div>
     );
 }

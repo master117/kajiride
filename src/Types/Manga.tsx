@@ -29,25 +29,25 @@ export enum Publisher {
 export const getColorFromPublisher = (publisher: Publisher): string => {
     switch (publisher) {
         case Publisher.altraverse:
-            return "#009de0";            
+            return "#02A9FF";
         case Publisher.Carlsen:
-            return "#24921f";          
+            return "#72E342";
         case Publisher.Egmont:
-            return "#ffed00";         
+            return "#f779a4";
         case Publisher.Kaze:
-            return "#b80000";          
+            return "#f79a63";
         case Publisher.MangaCult:
-            return "#b80000";         
+            return "#5c4dec";
         case Publisher.SevenSeas:
-            return "#";           
+            return "#23c4c4";
         case Publisher.Tokyopop:
-            return "b80000";           
+            return "#f14f63";
         case Publisher.VizMedia:
-            return "#";            
+            return "#f5f36d";
         case Publisher.YenPress:
-            return "#";           
+            return "#a44dfc";
         case Publisher.Other:
-            return "#";           
+            return "#848286";
     }
 }
 
@@ -74,4 +74,32 @@ export enum Genre {
     Shojo = "Shojo",
     SliceOfLife = "Slice of Life",
     Yuri = "Yuri",
+}
+
+export const getColorFromGenre = (genre: Genre): string => {
+    switch (genre) {
+        case Genre.Action:
+            return "#f14f63";
+        case Genre.Adventure:
+            return "#f79a63";
+        case Genre.Comedy:
+            return "#72e342";
+        case Genre.Drama:
+            return "#f5f36d";
+        case Genre.Fantasy:
+            return "#524dec";
+        case Genre.Horror:
+            return "#000000";
+        case Genre.Isekai:
+            return "#02a9ff";
+        case Genre.Mystery:
+            return "#848286";
+        case Genre.Shojo:
+            return "#f779a4";
+        case Genre.SliceOfLife:
+            return "#23c4c4";
+        case Genre.Yuri:
+            return "#a44dec";
+
+    }
 }
