@@ -16,6 +16,13 @@ html, body, #root  {
   height: 100%;
 }
 
+.button {
+  padding: 5px 10px;
+  background-color: #007ad9;
+  color: whitesmoke;
+  border-radius: 3px;
+}
+
 .normal.p-button {
   background-color: transparent;
   border: 0px;
