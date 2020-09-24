@@ -35,11 +35,26 @@
     border-radius: 15px;
     background-color: rgba(0,31,63, 0.85);
     color: white;
-    min-width: 60%; 
+    min-width: 70%; 
+}
+
+.activeButton {
+    background-color: #007ad9;
+    color: white;
+    margin: 0px 0px 0px 15px;
+    border-radius: 5px;
+
+}
+
+.inactiveButton {
+    background-color: #062141; 
+    color: #848286;
+    margin: 0px 0px 0px 15px;
+    border-radius: 5px;
 }
 
 .FormContainer {
-    margin-top: 10px;
+    margin-top: 15px;
     width: 100%;
 }
 
