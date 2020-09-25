@@ -1,9 +1,19 @@
+.Dummy {
+    height: 50px;
+    width: 100%;
+}
+
 .Navbar {
+    height: 50px;
+    width: 100%;
+
+    position: absolute;
+    top: 0px;
+    
     background-color: #333;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
 }
 
 .Left {
@@ -21,7 +31,11 @@
 
 .HamburgerMenu {
     display: none;
-    margin: 5px 20px 5px 5px !important;
+    margin: 5px 5px 5px 10px;
+}
+
+.UserMenu {
+    margin: 5px 10px 5px 5px;
 }
 
 .Link {

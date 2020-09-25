@@ -12,7 +12,7 @@ import MangaPage from './Pages/MangaPage/MangaPage'
 import ReleaseOverView from './Pages/ReleaseOverView/ReleaseOverView';
 import UserProfile from './Pages/UserProfile/UserProfile';
 
-import './App.css';
+import Styles from './App.module.css';
 
 const App = (props: any) => {
   const growl = useRef<Growl>(null);
@@ -27,9 +27,9 @@ const App = (props: any) => {
   const [loginBusy, setLoginBusy] = React.useState(false);
 
   useEffect(() => {
-    if (!mounted) {
+    if(!mounted) {
       setMounted(true);
-      if (cookies.user) {
+      if(cookies.user) {
         setUser(cookies.user);
       }
     }
@@ -45,7 +45,7 @@ const App = (props: any) => {
       }
       )
       .then(({ data }) => {
-        if (data != null) {
+        if(data != null) {
           setLoginBusy(false);
           setWrongLogin(false);
           setCookie("user", data, { path: '/' });
@@ -80,8 +80,8 @@ const App = (props: any) => {
       }
       )
       .then(({ data }) => {
-        if (data != null) {
-          if (data.Key) {
+        if(data != null) {
+          if(data.Key) {
             setWrongRegister(false);
             setMessage(undefined);
             logIn(username, password);
@@ -109,8 +109,8 @@ const App = (props: any) => {
     console.log(error.message);
     console.log(error.config);
     // 401 = Unauthorized => LogOut
-    if (error.response.status === 401) {
-      if (growl && growl.current)
+    if(error.response.status === 401) {
+      if(growl && growl.current)
         growl.current.show({ severity: 'error', summary: 'Error', detail: 'Token expired, user was logged out' });
       logOut();
     }
@@ -119,7 +119,7 @@ const App = (props: any) => {
   });
 
   return (
-    <div className="App">
+    <div className={Styles.App}>
       <Growl ref={growl} />
       <Helmet>
         <title>Kajiri.de</title>
@@ -129,11 +129,11 @@ const App = (props: any) => {
       </Helmet>
       <Router>
         <Navbar {...props} loginBusy={loginBusy} wrongLogin={wrongLogin} logIn={logIn} logOut={logOut} register={register} wrongRegister={wrongRegister} message={message} user={user} />
-        <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
-        <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
-        <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
-        <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
-        <Route path="/user/" render={(props) => <UserProfile {...props} user={user} />} />
+          <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
+          <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
+          <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
+          <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
+          <Route path="/user/" render={(props) => <UserProfile {...props} user={user} />} />
       </Router>
       <div style={{ position: "fixed", bottom: "0px", right: "0px", color: "white" }}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
     </div>

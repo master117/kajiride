@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { InputText } from 'primereact/inputtext'
 import { searchInput } from "../../../redux/actions/index";
 
-import classes from './Searchbar.module.css'
+import Styles from './Searchbar.module.css'
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -18,11 +18,11 @@ const Searchbar = (props) => {
     }
 
     return (
-        <div className={"p-inputgroup " + classes.SearchContainer }>
+        <div className={"p-inputgroup " + Styles.SearchContainer }>
             <span className="p-inputgroup-addon">
                 <i className="pi pi-search"></i>
             </span>
-            <InputText onChange={handleChange} placeholder="Manga, Artist..." />
+            <InputText className={Styles.InputText} onChange={handleChange} placeholder="Manga, Artist..." />
         </div>
     );
 };

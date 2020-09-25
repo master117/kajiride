@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Button } from "primereact/button"
 import MangaListEntry from './MangaListEntry/MangaListEntry';
-import classes from './MangaList.module.css';
+import Styles from './MangaList.module.css';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import { Growl } from 'primereact/growl';
@@ -23,17 +23,17 @@ const MangaList = (props) => {
     const returnData = pagedData.map(entry => <MangaListEntry manga={entry} key={entry.mangaid} />);
 
     useEffect(() => {
-        if (data.length === 0) {
+        if(data.length === 0) {
             axios
                 .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
                 .then(({ data }) => {
                     data.sort(function (a, b) {
                         var nameA = a.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
                         var nameB = b.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
-                        if (nameA < nameB) {
+                        if(nameA < nameB) {
                             return -1;
                         }
-                        if (nameA > nameB) {
+                        if(nameA > nameB) {
                             return 1;
                         }
 
@@ -48,28 +48,26 @@ const MangaList = (props) => {
                 });
         }
         else {
-            if (window.mangaListScroll) {
+            if(window.mangaListScroll) {
                 window.scrollTo(0, window.mangaListScroll);
                 delete window.mangaListScroll;
             }
         }
 
         return function cleanup() {
-            if (!window.mangaListScroll) {
+            if(!window.mangaListScroll) {
                 window.mangaListScroll = window.scrollY;
             }
         };
     }, [data.length]);
 
     return (
-        <div className={classes.Container}>
+        <div className={Styles.Container}>
             <Growl ref={growl} />
-            <div className={classes.Inner}>
-                {props.user && props.user.role === 1 ?
-                    <div style={{ width: "100%" }}>
-                        <Button label={"New Manga"} className={"button"} icon="pi pi-plus" onClick={() => props.history.push('/newmanga/')} />
-                    </div>
-                    : ""}
+            {props.user && props.user.role === 1 ?
+                    <Button label={"New Manga"} className={"button"} icon="pi pi-plus" onClick={() => props.history.push('/newmanga/')} />
+                : ""}
+            <div className={Styles.Inner}>
                 {returnData}
             </div>
         </div>
