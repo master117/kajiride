@@ -1,9 +1,12 @@
 .App {
-  background-color: #1f1a24;
-  background: url(./assets/39266182_p0.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  height: 100%;
   min-height: 100%;
+  overflow: hidden;
+}
+
+.Body {
+  height: calc(100% - 50px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
 }

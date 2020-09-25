@@ -129,13 +129,16 @@ const App = (props: any) => {
       </Helmet>
       <Router>
         <Navbar {...props} loginBusy={loginBusy} wrongLogin={wrongLogin} logIn={logIn} logOut={logOut} register={register} wrongRegister={wrongRegister} message={message} user={user} />
+        <div className={Styles.Body}>
           <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
           <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
           <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
           <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
           <Route path="/user/" render={(props) => <UserProfile {...props} user={user} />} />
+          <div style={{ position: "fixed", bottom: "0px", right: "25px", color: "white" }}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
+        </div>
       </Router>
-      <div style={{ position: "fixed", bottom: "0px", right: "0px", color: "white" }}><a href="https://www.pixiv.net/en/artworks/39266182">Art by 3211</a></div>
+      
     </div>
   );
 }

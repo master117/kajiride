@@ -22,7 +22,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
     useEffect(() => {
         // Check if User exists or route back
-        if (!props.user) {
+        if(!props.user) {
             //props.history.push("/");
             return;
         }
@@ -37,7 +37,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                 params: { userId: props.user.id, token: props.user.token, }
             })
             .then(({ data }) => {
-                if (data)
+                if(data)
                     setUserMangas(data);
             })
             .catch(function (error) { });
@@ -54,9 +54,9 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         var totalVolumes = 0;
         var userMangasIndex = 0;
 
-        while (userMangasIndex < userMangas.length) {
+        while(userMangasIndex < userMangas.length) {
             var userManga = userMangas[userMangasIndex];
-            if (userManga.owned) {
+            if(userManga.owned) {
                 totalVolumes += userManga.owned;
             }
 
@@ -82,34 +82,34 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         var totalAssigned = 0;
 
-        for (let i = 0; i < userMangas.length; i++) {
+        for(let i = 0; i < userMangas.length; i++) {
             const userManga = userMangas[i];
             const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
 
-            if (manga) {
+            if(manga) {
                 const stats = statsArray.find(entry => entry.name === manga.publisher);
 
-                if (stats) {
+                if(stats) {
                     totalAssigned++;
                     stats.count++;
                 }
             }
         }
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             const stats = statsArray[i];
             stats.percent = stats.count / totalAssigned;
         }
 
         console.log(statsArray);
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             var maxIndex = i;
             var max = 0;
 
-            for (let j = i; j < statsArray.length; j++) {
+            for(let j = i; j < statsArray.length; j++) {
                 var stats = statsArray[j];
-                if (stats.count > max) {
+                if(stats.count > max) {
                     max = stats.count;
                     maxIndex = j;
                 }
@@ -141,34 +141,34 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         var totalAssigned = 0;
 
-        for (let i = 0; i < userMangas.length; i++) {
+        for(let i = 0; i < userMangas.length; i++) {
             const userManga = userMangas[i];
             const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
 
-            if (manga) {
+            if(manga) {
                 const stats = statsArray.find(entry => entry.name === manga.publisher);
 
-                if (stats && userManga.owned) {
+                if(stats && userManga.owned) {
                     totalAssigned = totalAssigned + userManga.owned;
                     stats.count = stats.count + userManga.owned;
                 }
             }
         }
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             const stats = statsArray[i];
             stats.percent = stats.count / totalAssigned;
         }
 
         console.log(statsArray);
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             var maxIndex = i;
             var max = 0;
 
-            for (let j = i; j < statsArray.length; j++) {
+            for(let j = i; j < statsArray.length; j++) {
                 var stats = statsArray[j];
-                if (stats.count > max) {
+                if(stats.count > max) {
                     max = stats.count;
                     maxIndex = j;
                 }
@@ -201,34 +201,34 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         var totalAssigned = 0;
 
-        for (let i = 0; i < userMangas.length; i++) {
+        for(let i = 0; i < userMangas.length; i++) {
             const userManga = userMangas[i];
             const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
 
-            if (manga) {
+            if(manga) {
                 const stats = statsArray.find(entry => entry.name === manga.genre);
 
-                if (stats) {
+                if(stats) {
                     totalAssigned++;
                     stats.count++;
                 }
             }
         }
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             const stats = statsArray[i];
             stats.percent = stats.count / totalAssigned;
         }
 
         console.log(statsArray);
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             var maxIndex = i;
             var max = 0;
 
-            for (let j = i; j < statsArray.length; j++) {
+            for(let j = i; j < statsArray.length; j++) {
                 var stats = statsArray[j];
-                if (stats.count > max) {
+                if(stats.count > max) {
                     max = stats.count;
                     maxIndex = j;
                 }
@@ -244,7 +244,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         return statsArray;
     }
 
-    
+
     function getGenreVolumesData(): Stats[] {
         let statsArray: Stats[] = [];
 
@@ -262,34 +262,34 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         var totalAssigned = 0;
 
-        for (let i = 0; i < userMangas.length; i++) {
+        for(let i = 0; i < userMangas.length; i++) {
             const userManga = userMangas[i];
             const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
 
-            if (manga) {
+            if(manga) {
                 const stats = statsArray.find(entry => entry.name === manga.genre);
 
-                if (stats && userManga.owned) {
+                if(stats && userManga.owned) {
                     totalAssigned = totalAssigned + userManga.owned;
                     stats.count = stats.count + userManga.owned;
                 }
             }
         }
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             const stats = statsArray[i];
             stats.percent = stats.count / totalAssigned;
         }
 
         console.log(statsArray);
 
-        for (let i = 0; i < statsArray.length; i++) {
+        for(let i = 0; i < statsArray.length; i++) {
             var maxIndex = i;
             var max = 0;
 
-            for (let j = i; j < statsArray.length; j++) {
+            for(let j = i; j < statsArray.length; j++) {
                 var stats = statsArray[j];
-                if (stats.count > max) {
+                if(stats.count > max) {
                     max = stats.count;
                     maxIndex = j;
                 }
@@ -309,7 +309,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         const statsArray = getPublisherData();
         const cutArray = [];
 
-        for (let i = 0; i < 5; i++) {
+        for(let i = 0; i < 5; i++) {
             const element = statsArray[i];
             cutArray.push(element);
         }
@@ -338,11 +338,11 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                     const backGroundColor = getColorFromPublisher(stats.name as Publisher);
 
                     let extraStyle = undefined;
-                    if (i === 0) {
+                    if(i === 0) {
                         extraStyle = Styles.LeftChart;
                     }
 
-                    if (i === statsArray.length - 1) {
+                    if(i === statsArray.length - 1) {
                         extraStyle = Styles.RightChart;
                     }
 
@@ -360,7 +360,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         const statsArray = getPublisherVolumesData();
         const cutArray = [];
 
-        for (let i = 0; i < 5; i++) {
+        for(let i = 0; i < 5; i++) {
             const element = statsArray[i];
             cutArray.push(element);
         }
@@ -389,11 +389,11 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                     const backGroundColor = getColorFromPublisher(stats.name as Publisher);
 
                     let extraStyle = undefined;
-                    if (i === 0) {
+                    if(i === 0) {
                         extraStyle = Styles.LeftChart;
                     }
 
-                    if (i === statsArray.length - 1) {
+                    if(i === statsArray.length - 1) {
                         extraStyle = Styles.RightChart;
                     }
 
@@ -411,7 +411,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         const statsArray = getGenreData();
         const cutArray = [];
 
-        for (let i = 0; i < 5; i++) {
+        for(let i = 0; i < 5; i++) {
             const element = statsArray[i];
             cutArray.push(element);
         }
@@ -440,11 +440,11 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                     const backGroundColor = getColorFromGenre(stats.name as Genre);
 
                     let extraStyle = undefined;
-                    if (i === 0) {
+                    if(i === 0) {
                         extraStyle = Styles.LeftChart;
                     }
 
-                    if (i === statsArray.length - 1) {
+                    if(i === statsArray.length - 1) {
                         extraStyle = Styles.RightChart;
                     }
 
@@ -462,7 +462,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         const statsArray = getGenreVolumesData();
         const cutArray = [];
 
-        for (let i = 0; i < 5; i++) {
+        for(let i = 0; i < 5; i++) {
             const element = statsArray[i];
             cutArray.push(element);
         }
@@ -491,11 +491,11 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                     const backGroundColor = getColorFromGenre(stats.name as Genre);
 
                     let extraStyle = undefined;
-                    if (i === 0) {
+                    if(i === 0) {
                         extraStyle = Styles.LeftChart;
                     }
 
-                    if (i === statsArray.length - 1) {
+                    if(i === statsArray.length - 1) {
                         extraStyle = Styles.RightChart;
                     }
 
@@ -559,20 +559,24 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
             </div>
             <div className={Styles.Chips}>
                 <div className={Styles.Chip}>
-                    <div className={"test"}>
+                    <div className={Styles.toggleBar}>
                         Publisher Overview per
-                        <button className={flippedPublisher ? Styles.activeButton : Styles.inactiveButton} onClick={getPublisherPerSeries} >Series</button>
-                        <button className={flippedPublisher ? Styles.inactiveButton : Styles.activeButton} onClick={getPublisherPerVolumes} >Volumes</button>
+                        <div className={Styles.toggles}>
+                            <button className={flippedPublisher ? Styles.activeButton : Styles.inactiveButton} onClick={getPublisherPerSeries} >Series</button>
+                            <button className={flippedPublisher ? Styles.inactiveButton : Styles.activeButton} onClick={getPublisherPerVolumes} >Volumes</button>
+                        </div>
                     </div>
                     {flippedPublisher ? getPublisherNames() : getPublisherVolumesNames()}
                     {flippedPublisher ? getPublisherChart() : getPublisherVolumesChart()}
                 </div>
 
                 <div className={Styles.Chip}>
-                <div className={"test"}>
+                    <div className={Styles.toggleBar}>
                         Genre Overview per
-                        <button className={flippedGenre ? Styles.activeButton : Styles.inactiveButton} onClick={getGenrePerSeries} >Series</button>
-                        <button className={flippedGenre ? Styles.inactiveButton : Styles.activeButton} onClick={getGenrePerVolumes} >Volumes</button>
+                        <div className={Styles.toggles}>
+                            <button className={flippedGenre ? Styles.activeButton : Styles.inactiveButton} onClick={getGenrePerSeries} >Series</button>
+                            <button className={flippedGenre ? Styles.inactiveButton : Styles.activeButton} onClick={getGenrePerVolumes} >Volumes</button>
+                        </div>
                     </div>
                     {flippedGenre ? getGenreNames() : getGenreVolumesNames()}
                     {flippedGenre ? getGenreChart() : getGenreVolumesChart()}
