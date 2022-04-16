@@ -1,11 +1,13 @@
 .Container {
-    margin-top: 20px;
+    padding-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     /*background-color: #2e4053;*/
     width: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .Inner {

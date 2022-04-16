@@ -189,14 +189,16 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         statsArray.push({ name: Genre.Action, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Adventure, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.BoysLove, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Comedy, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Drama, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Fantasy, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Horror, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Isekai, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Mystery, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Shojo, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Romance, count: 0, percent: 0 });
         statsArray.push({ name: Genre.SliceOfLife, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Thriller, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Yuri, count: 0, percent: 0 });
 
         var totalAssigned = 0;
@@ -250,14 +252,16 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
 
         statsArray.push({ name: Genre.Action, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Adventure, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.BoysLove, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Comedy, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Drama, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Fantasy, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Horror, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Isekai, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Mystery, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Shojo, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Romance, count: 0, percent: 0 });
         statsArray.push({ name: Genre.SliceOfLife, count: 0, percent: 0 });
+        statsArray.push({ name: Genre.Thriller, count: 0, percent: 0 });
         statsArray.push({ name: Genre.Yuri, count: 0, percent: 0 });
 
         var totalAssigned = 0;

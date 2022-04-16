@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
-import { Growl } from 'primereact/growl';
+import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 import { RouteComponentProps } from "react-router";
 
@@ -14,7 +14,7 @@ import { Manga, Publisher, Status, Language, Genre } from '../../Types/Manga';
 import { UserManga } from '../../Types/UserManga';
 import { Dropdown } from 'primereact/dropdown';
 
-type TParams = { id: string };
+type TParams = { id?: string };
 
 interface IMangaPageProps extends RouteComponentProps<TParams> {
     user: User | null;
@@ -23,7 +23,7 @@ interface IMangaPageProps extends RouteComponentProps<TParams> {
 
 const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
 
-    const growl = useRef<Growl>(null);
+    const toast = useRef<Toast>(null);
     const [userMangaDialogVisible, setUserMangaDialogVisible] = useState(false);
     const [mangaDialogVisible, setMangaDialogVisible] = useState(false);
     const [data, setData] = useState<Manga>({} as Manga);
@@ -226,14 +226,14 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 token: props.user.token
             })
             .then(({ data }) => {
-                if (growl && growl.current)
-                    growl.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
+                if (toast && toast.current)
+                    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
                 setData(data);
             })
             .catch(function (error) {
                 // handle error
-                if (growl && growl.current)
-                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
+                if (toast && toast.current)
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
             });
     }
 
@@ -249,14 +249,14 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                     token: props.user.token
                 })
                 .then(({ data }) => {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
                     setUserData(data);
                 })
                 .catch(function (error) {
                     // handle error
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
                 });
         }
         else {
@@ -269,14 +269,14 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                     token: props.user.token
                 })
                 .then(({ data }) => {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Manga updated' });
                     setUserData(data);
                 })
                 .catch(function (error) {
                     // handle error
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Manga' });
                 });
         }
     }
@@ -294,25 +294,25 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
             )
             .then(({ data }) => {
                 if (data) {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'success', summary: 'Success', detail: 'Manga created' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Manga created' });
                     props.history.push('/manga/' + data.mangaid);
                 }
                 else {
-                    if (growl && growl.current)
-                        growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga' });
+                    if (toast && toast.current)
+                        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga' });
                 }
             })
             .catch(function (error) {
                 // handle error
-                if (growl && growl.current)
-                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga' });
+                if (toast && toast.current)
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t create Manga' });
             });
     }
 
     return (
         <div className={Styles.Container}>
-            <Growl ref={growl} />
+            <Toast ref={toast} />
             <Dialog header="Edit Manga" visible={userMangaDialogVisible} modal={true} onHide={() => setUserMangaDialogVisible(false)}>{editUserMangaDialog()}</Dialog>
             <Dialog header="Edit Manga" visible={mangaDialogVisible} modal={true} onHide={() => setMangaDialogVisible(false)}>{editMangaDialog()}</Dialog>
             <div className={Styles.Sidebar}>

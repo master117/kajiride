@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { CookiesProvider } from 'react-cookie';
 
-import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/themes/bootstrap4-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './index.css';

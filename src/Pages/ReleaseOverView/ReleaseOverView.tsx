@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 
-import FullCalendar from '@fullcalendar/react'
+import FullCalendar, { EventContentArg } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
-import { EventApi } from "@fullcalendar/core";
+import { EventApi, EventInput } from "@fullcalendar/core";
 
-import { Growl } from 'primereact/growl';
+import { Toast } from 'primereact/toast';
 
 import AddReleaseDialog from "./AddReleaseDialog/AddReleaseDialog";
 import ReleaseGroupDialog from "./ReleaseGroupDialog/ReleaseGroupDialog";
@@ -25,7 +25,7 @@ interface IReleaseOverviewProps {
 }
 
 const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
-    const growl = useRef<Growl>(null);
+    const toast = useRef<Toast>(null);
 
     const [releases, setReleases] = useState<Release[]>([]);
     const [manga, setManga] = useState<Manga[]>([]);
@@ -83,8 +83,8 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
             })
             .catch(function (error) {
                 // handle error
-                if(growl && growl.current)
-                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Release' });
+                if(toast && toast.current)
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t update Release' });
             });
     }
 
@@ -103,14 +103,14 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                 token: props.user.token
             })
             .then(() => {
-                if(growl && growl.current)
-                    growl.current.show({ severity: 'success', summary: 'Success', detail: 'Release updated' });
+                if(toast && toast.current)
+                    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Release updated' });
                 updateData();
             })
             .catch(function (error) {
                 // handle error
-                if(growl && growl.current)
-                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t add Release' });
+                if(toast && toast.current)
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t add Release' });
             });
     }
 
@@ -128,14 +128,14 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                 data: { releaseid: release.releaseid, token: props.user.token },
             })
             .then(() => {
-                if(growl && growl.current)
-                    growl.current.show({ severity: 'success', summary: 'Success', detail: 'Release deleted' });
+                if(toast && toast.current)
+                    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Release deleted' });
                 updateData();
             })
             .catch(function (error) {
                 // handle error
-                if(growl && growl.current)
-                    growl.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t delete Release' });
+                if(toast && toast.current)
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Couldn\'t delete Release' });
             });
     }
 
@@ -164,8 +164,8 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
         console.log(event);
     }
 
-    const getEvents = () => {
-        let events: EventApi[] = [];
+    const getEvents = (): EventInput[] => {
+        let events: EventInput[] = [];
 
         for(let i = 0; i < releases.length; i++) {
             const currManga = manga.find(x => x.mangaid === releases[i].mangaid);
@@ -263,7 +263,7 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
     return (
         <div className={Styles.main}>
             <div className={Styles.inner}>
-                <Growl ref={growl} />
+                <Toast ref={toast} />
                 {showAddReleaseDialog !== null ?
                     <AddReleaseDialog
                         visible={true}
@@ -274,23 +274,24 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                     : ""}
                 <div className={Styles.calendarDesktopDiv}>
                     <FullCalendar
-                        defaultView="dayGridMonth"
+                        initialView="dayGridMonth"
                         plugins={[dayGridPlugin, interactionPlugin]}
                         //Look
                         weekends={true}
                         firstDay={1}
                         locale={"de"}
                         weekNumbers={true}
-                        weekLabel={"KW"}
+                        weekText={"KW"}
                         fixedWeekCount={false}
                         showNonCurrentDates={false}
-                        eventRender={info => {
+                        // TODO
+                        eventContent={(info: EventContentArg) => {
                             //if(info.el && info.el.firstChild)
                             //(info.el.firstChild as any).innerText = "Text Overwrite";
-                            return info.el
+                            return info.event.title
                         }}
                         //Style
-                        height={"parent"}
+                        height={"auto"}
                         //Data
                         events={getEvents()}
                         timeZone={"UTC"}
@@ -328,7 +329,9 @@ const Releases: React.FunctionComponent<IReleaseOverviewProps> = (props) => {
                                                         setOpenPub([...openPub].filter(x => x.indexDay !== i || x.indexPub !== j));
                                                 }} 
                                                 style={{backgroundColor: getColorFromPublisher(releasesByPub.publisher)}}
-                                                >{releasesByPub.publisher}</div>
+                                                >
+                                                    {releasesByPub.publisher}
+                                                </div>
                                                 <div style={{ display: openPub.some(x => x.indexDay === i && x.indexPub === j) ? "block" : "none" }}>
                                                     {releasesByPub.releases.map((release, k) => {
                                                         const currentManga = manga.find(x => x.mangaid === release.mangaid) as Manga;

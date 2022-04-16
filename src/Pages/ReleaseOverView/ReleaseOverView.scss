@@ -1,7 +1,8 @@
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
+.fc .fc-toolbar .fc-button {
+    display: inline-block !important;
+}
 
-.fc td {
+.fc td, .fc .fc-scrollgrid-section-sticky > * {
     background-color: rgba($color: rgb(54, 54, 58), $alpha: 0.5);
 }
 
@@ -15,4 +16,8 @@
 
 .fc th {
     vertical-align: middle;
+}
+
+.fc-event-main {
+    cursor: pointer;
 }

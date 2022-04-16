@@ -73,3 +73,7 @@ code {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.p-button {
+  overflow: visible;
+}
