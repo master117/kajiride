@@ -12,12 +12,15 @@ import MangaPage from './Pages/MangaPage/MangaPage'
 import ReleaseOverView from './Pages/ReleaseOverView/ReleaseOverView';
 import UserProfile from './Pages/UserProfile/UserProfile';
 
+import { Manga } from "./Types/Manga";
+
 import Styles from './App.module.css';
 
 const App = (props: any) => {
   const toast = useRef<Toast>(null);
 
   const [mounted, setMounted] = useState(false);
+  const [mangaData, setMangaData] = useState<Manga[]>([]);
 
   const [cookies, setCookie, removeCookie] = useCookies(['user']);
   const [user, setUser] = useState(null);
@@ -34,6 +37,34 @@ const App = (props: any) => {
       }
     }
   }, [mounted, cookies.user, props]);
+
+  
+
+  useEffect(() => {
+    axios
+        .get(process.env.REACT_APP_ENDPOINT + "/api/manga")
+        .then((response: { data: Manga[] }) => {
+            response.data.sort(function (a, b) {
+                var nameA = a.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
+                var nameB = b.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase(); // ignore upper and lowercase
+                if(nameA < nameB) {
+                    return -1;
+                }
+                if(nameA > nameB) {
+                    return 1;
+                }
+
+                // names must be equal
+                return 0;
+            });
+            setMangaData(response.data);
+        })
+        .catch(function (error) {
+            // handle error
+            if(toast && toast.current)
+                toast.current.show({ severity: 'error', summary: 'Error Loading Data', detail: error.message });
+        });
+  }, []);
 
   const logIn = (username: string, password: string) => {
     setLoginBusy(true);
@@ -130,7 +161,7 @@ const App = (props: any) => {
       <Router>
         <Navbar {...props} loginBusy={loginBusy} wrongLogin={wrongLogin} logIn={logIn} logOut={logOut} register={register} wrongRegister={wrongRegister} message={message} user={user} />
         <div className={Styles.Body}>
-          <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} />} />
+          <Route path="/" exact render={(props) => <MangaList {...props} logOut={logOut} user={user} mangaData={mangaData} />} />
           <Route path="/manga/:id" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
           <Route path="/newmanga/" render={(props) => <MangaPage {...props} logOut={logOut} user={user} />} />
           <Route path="/releases/" render={(props) => <ReleaseOverView {...props} logOut={logOut} user={user} />} />
