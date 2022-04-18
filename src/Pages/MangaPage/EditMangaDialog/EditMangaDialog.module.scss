@@ -1,0 +1,52 @@
+.Modal {
+    z-index: 1001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 15, 15, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Dialog {
+    max-width: min(600px, 90%);
+    background-color: white;
+    border-radius: 5px;
+    padding: 28px;
+}
+
+.FormContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Dropdown {
+    width: 150px;
+}
+
+.FormButtonRow {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        margin-left: 20px;
+    }
+}
+
+.Volumes {
+    max-width: 100px;
+}
+
+.Description {
+    width: 100%;
+    align-self: stretch;
+    flex:0 0 auto;
+}
+
+.FormInput {
+    margin: 15px 10px;
+}
+
