@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import { useHistory, useParams } from "react-router";
 
 import EditMangaDialog from "./EditMangaDialog/EditMangaDialog";
+import Cover from "../../assets/cover.jpg"
 
 import { Manga } from '../../Types/Manga';
 import { User } from '../../Types/User';
@@ -25,7 +26,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
 
     const toast = useRef<Toast>(null);
     const [userMangaDialogVisible, setUserMangaDialogVisible] = useState(false);
-    const [mangaDialogVisible, setMangaDialogVisible] = useState(false);
+    const [mangaDialogVisible, setMangaDialogVisible] = useState(!id);
     const [manga, setManga] = useState<Manga>({} as Manga);
     const [userManga, setUserManga] = useState<UserManga>({} as UserManga);
     const [update, setUpdate] = useState(true);
@@ -81,7 +82,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
     }, [id, props.user, updateUserManga]);       
 
     const onMangaAdded = (manga: Manga) => {
-        history.push('/manga/' + manga.mangaid);
+        history.replace('/manga/' + manga.mangaid);
         setMangaDialogVisible(false)
     }
 
@@ -100,11 +101,18 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
         setUserMangaDialogVisible(false);
     };
 
+    const onMangaEditCancel = () => {
+        if(id)
+            setMangaDialogVisible(false);
+        else
+            history.push('/');
+    }
+
     return (
         <div className={Styles.Container}>
             <Toast ref={toast} />
             <div className={Styles.Sidebar}>
-                <img className={Styles.MangaImage} src={manga ? manga.image : ""} alt="Cover" />
+                <img className={Styles.MangaImage} src={manga.image ? manga.image : Cover} alt="Cover" />
                 {id && props.user ?
                     <Button label={"Edit"} icon="pi pi-pencil" className={Styles.WideButton} onClick={() => setUserMangaDialogVisible(true)}></Button> : ""}
                 {props.user && props.user.role === 1 ?
@@ -173,7 +181,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                     onMangaAdded={onMangaAdded} 
                     onMangaUpdated={onMangaUpdated} 
                     onMangaDeleted={onMangaDeleted}
-                    onMangaEditCancel={() => setMangaDialogVisible(false)}
+                    onMangaEditCancel={onMangaEditCancel}
                 />
             }
             {

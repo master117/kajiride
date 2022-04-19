@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import React, { useState, useEffect } from "react";
 
 import { withRouter, RouteComponentProps } from "react-router";
 
@@ -45,7 +45,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
     }, [props.history, props.user]);
 
     // Get total amount of different mangas
-    function getTotalManga(): JSX.Element {
+    function getTotalMangaSeries(): JSX.Element {
         return <div>{userMangas.length}</div>;
     }
 
@@ -66,251 +66,35 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         return <div>{totalVolumes}</div>;
     }
 
-    function getPublisherData(): Stats[] {
-        let statsArray: Stats[] = [];
-
-        statsArray.push({ name: Publisher.altraverse, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Carlsen, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Egmont, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Kaze, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.MangaCult, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.SevenSeas, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Tokyopop, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.VizMedia, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.YenPress, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Other, count: 0, percent: 0 });
-
-        var totalAssigned = 0;
-
+    function getPublisherOrGenreData(perGenre: boolean, perVolume: boolean): Stats[] {
+        const statsArray: Stats[] = Object.values(perGenre ? Genre : Publisher).map(x => ({name: x, count: 0, percent: 0}));
+        
         for(let i = 0; i < userMangas.length; i++) {
             const userManga = userMangas[i];
             const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
+            if(!manga || !userManga.owned)
+                continue;
 
-            if(manga) {
-                const stats = statsArray.find(entry => entry.name === manga.publisher);
+            const stats = statsArray.find(entry => entry.name === (perGenre ? manga.genre : manga.publisher)) as Stats;
+            if(!stats)
+                continue;
 
-                if(stats) {
-                    totalAssigned++;
-                    stats.count++;
-                }
-            }
+            stats.count += perVolume ? userManga.owned : 1;
         }
 
-        for(let i = 0; i < statsArray.length; i++) {
-            const stats = statsArray[i];
-            stats.percent = stats.count / totalAssigned;
-        }
+        const totalAssigned = statsArray.reduce((acc, curr) => acc + curr.count, 0);
+        for(let i = 0; i < statsArray.length; i++)
+            statsArray[i].percent = statsArray[i].count / totalAssigned;
 
-        console.log(statsArray);
-
-        for(let i = 0; i < statsArray.length; i++) {
-            var maxIndex = i;
-            var max = 0;
-
-            for(let j = i; j < statsArray.length; j++) {
-                var stats = statsArray[j];
-                if(stats.count > max) {
-                    max = stats.count;
-                    maxIndex = j;
-                }
-            }
-
-            var temp = statsArray[i];
-            statsArray[i] = statsArray[maxIndex];
-            statsArray[maxIndex] = temp;
-        }
+        statsArray.sort((x,y) => y.count - x.count)
 
         console.log(statsArray);
 
         return statsArray;
     }
 
-    function getPublisherVolumesData(): Stats[] {
-        let statsArray: Stats[] = [];
-
-        statsArray.push({ name: Publisher.altraverse, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Carlsen, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Egmont, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Kaze, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.MangaCult, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.SevenSeas, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Tokyopop, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.VizMedia, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.YenPress, count: 0, percent: 0 });
-        statsArray.push({ name: Publisher.Other, count: 0, percent: 0 });
-
-        var totalAssigned = 0;
-
-        for(let i = 0; i < userMangas.length; i++) {
-            const userManga = userMangas[i];
-            const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
-
-            if(manga) {
-                const stats = statsArray.find(entry => entry.name === manga.publisher);
-
-                if(stats && userManga.owned) {
-                    totalAssigned = totalAssigned + userManga.owned;
-                    stats.count = stats.count + userManga.owned;
-                }
-            }
-        }
-
-        for(let i = 0; i < statsArray.length; i++) {
-            const stats = statsArray[i];
-            stats.percent = stats.count / totalAssigned;
-        }
-
-        console.log(statsArray);
-
-        for(let i = 0; i < statsArray.length; i++) {
-            var maxIndex = i;
-            var max = 0;
-
-            for(let j = i; j < statsArray.length; j++) {
-                var stats = statsArray[j];
-                if(stats.count > max) {
-                    max = stats.count;
-                    maxIndex = j;
-                }
-            }
-
-            var temp = statsArray[i];
-            statsArray[i] = statsArray[maxIndex];
-            statsArray[maxIndex] = temp;
-        }
-
-        console.log(statsArray);
-
-        return statsArray;
-    }
-
-    function getGenreData(): Stats[] {
-        let statsArray: Stats[] = [];
-
-        statsArray.push({ name: Genre.Action, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Adventure, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.BoysLove, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Comedy, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Drama, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Fantasy, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Horror, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Isekai, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Mystery, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Romance, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.SliceOfLife, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Thriller, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Yuri, count: 0, percent: 0 });
-
-        var totalAssigned = 0;
-
-        for(let i = 0; i < userMangas.length; i++) {
-            const userManga = userMangas[i];
-            const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
-
-            if(manga) {
-                const stats = statsArray.find(entry => entry.name === manga.genre);
-
-                if(stats) {
-                    totalAssigned++;
-                    stats.count++;
-                }
-            }
-        }
-
-        for(let i = 0; i < statsArray.length; i++) {
-            const stats = statsArray[i];
-            stats.percent = stats.count / totalAssigned;
-        }
-
-        console.log(statsArray);
-
-        for(let i = 0; i < statsArray.length; i++) {
-            var maxIndex = i;
-            var max = 0;
-
-            for(let j = i; j < statsArray.length; j++) {
-                var stats = statsArray[j];
-                if(stats.count > max) {
-                    max = stats.count;
-                    maxIndex = j;
-                }
-            }
-
-            var temp = statsArray[i];
-            statsArray[i] = statsArray[maxIndex];
-            statsArray[maxIndex] = temp;
-        }
-
-        console.log(statsArray);
-
-        return statsArray;
-    }
-
-
-    function getGenreVolumesData(): Stats[] {
-        let statsArray: Stats[] = [];
-
-        statsArray.push({ name: Genre.Action, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Adventure, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.BoysLove, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Comedy, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Drama, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Fantasy, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Horror, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Isekai, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Mystery, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Romance, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.SliceOfLife, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Thriller, count: 0, percent: 0 });
-        statsArray.push({ name: Genre.Yuri, count: 0, percent: 0 });
-
-        var totalAssigned = 0;
-
-        for(let i = 0; i < userMangas.length; i++) {
-            const userManga = userMangas[i];
-            const manga = mangas.find(manga => manga.mangaid === userManga.mangaid);
-
-            if(manga) {
-                const stats = statsArray.find(entry => entry.name === manga.genre);
-
-                if(stats && userManga.owned) {
-                    totalAssigned = totalAssigned + userManga.owned;
-                    stats.count = stats.count + userManga.owned;
-                }
-            }
-        }
-
-        for(let i = 0; i < statsArray.length; i++) {
-            const stats = statsArray[i];
-            stats.percent = stats.count / totalAssigned;
-        }
-
-        console.log(statsArray);
-
-        for(let i = 0; i < statsArray.length; i++) {
-            var maxIndex = i;
-            var max = 0;
-
-            for(let j = i; j < statsArray.length; j++) {
-                var stats = statsArray[j];
-                if(stats.count > max) {
-                    max = stats.count;
-                    maxIndex = j;
-                }
-            }
-
-            var temp = statsArray[i];
-            statsArray[i] = statsArray[maxIndex];
-            statsArray[maxIndex] = temp;
-        }
-
-        console.log(statsArray);
-
-        return statsArray;
-    }
-
-    function getPublisherNames(): JSX.Element {
-        const statsArray = getPublisherData();
+    function getPublisherOrGenreNames(perGenre: boolean, perVolume: boolean): JSX.Element {
+        const statsArray = getPublisherOrGenreData(perGenre, perVolume);
         const cutArray = [];
 
         for(let i = 0; i < 5; i++) {
@@ -321,7 +105,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         return (
             <div className={Styles.NamesContainer}>
                 {cutArray.map(stats => {
-                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
+                    const backGroundColor = perGenre ? getColorFromGenre(stats.name as Genre) : getColorFromPublisher(stats.name as Publisher);
                     return (
                         <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
                             {stats.count + " in " + stats.name}
@@ -332,14 +116,14 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         )
     }
 
-    function getPublisherChart(): JSX.Element {
-        const statsArray = getPublisherData();
+    function getPublisherOrGenreChart(perGenre: boolean, perVolume: boolean): JSX.Element {
+        const statsArray = getPublisherOrGenreData(perGenre, perVolume);
 
         return (
             <div className={Styles.ChartContainer}>
                 {statsArray.map((stats, i) => {
                     const percent = stats.percent * 100;
-                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
+                    const backGroundColor = perGenre ? getColorFromGenre(stats.name as Genre) : getColorFromPublisher(stats.name as Publisher);
 
                     let extraStyle = undefined;
                     if(i === 0) {
@@ -360,174 +144,7 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
         )
     }
 
-    function getPublisherVolumesNames(): JSX.Element {
-        const statsArray = getPublisherVolumesData();
-        const cutArray = [];
-
-        for(let i = 0; i < 5; i++) {
-            const element = statsArray[i];
-            cutArray.push(element);
-        }
-
-        return (
-            <div className={Styles.NamesContainer}>
-                {cutArray.map(stats => {
-                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
-                    return (
-                        <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
-                            {stats.count + " in " + stats.name}
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getPublisherVolumesChart(): JSX.Element {
-        const statsArray = getPublisherVolumesData();
-
-        return (
-            <div className={Styles.ChartContainer}>
-                {statsArray.map((stats, i) => {
-                    const percent = stats.percent * 100;
-                    const backGroundColor = getColorFromPublisher(stats.name as Publisher);
-
-                    let extraStyle = undefined;
-                    if(i === 0) {
-                        extraStyle = Styles.LeftChart;
-                    }
-
-                    if(i === statsArray.length - 1) {
-                        extraStyle = Styles.RightChart;
-                    }
-
-                    return (
-                        <div style={{ width: percent + "%", backgroundColor: backGroundColor }} key={stats.name} className={extraStyle + " tooltip"}>
-                            <span className={"tooltiptext"}>{stats.name}</span>
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getGenreNames(): JSX.Element {
-        const statsArray = getGenreData();
-        const cutArray = [];
-
-        for(let i = 0; i < 5; i++) {
-            const element = statsArray[i];
-            cutArray.push(element);
-        }
-
-        return (
-            <div className={Styles.NamesContainer}>
-                {cutArray.map(stats => {
-                    const backGroundColor = getColorFromGenre(stats.name as Genre);
-                    return (
-                        <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
-                            {stats.count + " in " + stats.name}
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getGenreChart(): JSX.Element {
-        const statsArray = getGenreData();
-
-        return (
-            <div className={Styles.ChartContainer}>
-                {statsArray.map((stats, i) => {
-                    const percent = stats.percent * 100;
-                    const backGroundColor = getColorFromGenre(stats.name as Genre);
-
-                    let extraStyle = undefined;
-                    if(i === 0) {
-                        extraStyle = Styles.LeftChart;
-                    }
-
-                    if(i === statsArray.length - 1) {
-                        extraStyle = Styles.RightChart;
-                    }
-
-                    return (
-                        <div style={{ width: percent + "%", backgroundColor: backGroundColor }} key={stats.name} className={extraStyle + " tooltip"}>
-                            <span className={"tooltiptext"}>{stats.name}</span>
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getGenreVolumesNames(): JSX.Element {
-        const statsArray = getGenreVolumesData();
-        const cutArray = [];
-
-        for(let i = 0; i < 5; i++) {
-            const element = statsArray[i];
-            cutArray.push(element);
-        }
-
-        return (
-            <div className={Styles.NamesContainer}>
-                {cutArray.map(stats => {
-                    const backGroundColor = getColorFromGenre(stats.name as Genre);
-                    return (
-                        <div style={{ backgroundColor: backGroundColor }} key={stats.name} className={Styles.NamePlate}>
-                            {stats.count + " in " + stats.name}
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getGenreVolumesChart(): JSX.Element {
-        const statsArray = getGenreVolumesData();
-
-        return (
-            <div className={Styles.ChartContainer}>
-                {statsArray.map((stats, i) => {
-                    const percent = stats.percent * 100;
-                    const backGroundColor = getColorFromGenre(stats.name as Genre);
-
-                    let extraStyle = undefined;
-                    if(i === 0) {
-                        extraStyle = Styles.LeftChart;
-                    }
-
-                    if(i === statsArray.length - 1) {
-                        extraStyle = Styles.RightChart;
-                    }
-
-                    return (
-                        <div style={{ width: percent + "%", backgroundColor: backGroundColor }} key={stats.name} className={extraStyle + " tooltip"}>
-                            <span className={"tooltiptext"}>{stats.name}</span>
-                        </div>
-                    );
-                })}
-            </div>
-        )
-    }
-
-    function getPublisherPerSeries() {
-        setFlippedPublisher(true)
-    }
-
-    function getPublisherPerVolumes() {
-        setFlippedPublisher(false)
-    }
-
-    function getGenrePerSeries() {
-        setFlippedGenre(true)
-    }
-
-    function getGenrePerVolumes() {
-        setFlippedGenre(false)
-    }
+    const getButtonStyles = (active: boolean) => active ? Styles.activeButton : Styles.inactiveButton;
 
     console.log("---------------------------------");
     console.log(props.user);
@@ -542,48 +159,41 @@ const UserProfile: React.FunctionComponent<IUserProfile> = (props) => {
                         User Statistics
                     </div>
                 </div>
-                <div className={Styles.FormContainer}>
-                    <div className={Styles.Row}>
-                        <div className={Styles.Left}>
-                            Total manga:
-                        </div>
-                        <div className={Styles.Right}>
-                            {getTotalManga()}
-                        </div>
-                    </div>
-                    <div className={Styles.Row}>
-                        <div className={Styles.Left}>
-                            Total manga volumes:
-                        </div>
-                        <div className={Styles.Right}>
-                            {getTotalMangaVolumes()}
-                        </div>
-                    </div>
-                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Total manga series:</td>
+                            <td>{getTotalMangaSeries()}</td>
+                        </tr>
+                        <tr>
+                            <td>Total manga volumes:</td>
+                            <td>{getTotalMangaVolumes()}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div className={Styles.Chips}>
                 <div className={Styles.Chip}>
                     <div className={Styles.toggleBar}>
                         Publisher Overview per
                         <div className={Styles.toggles}>
-                            <button className={flippedPublisher ? Styles.activeButton : Styles.inactiveButton} onClick={getPublisherPerSeries} >Series</button>
-                            <button className={flippedPublisher ? Styles.inactiveButton : Styles.activeButton} onClick={getPublisherPerVolumes} >Volumes</button>
+                            <button className={getButtonStyles(!flippedPublisher)} onClick={() => setFlippedPublisher(false)}>Series</button>
+                            <button className={getButtonStyles(flippedPublisher)} onClick={() => setFlippedPublisher(true)}>Volumes</button>
                         </div>
                     </div>
-                    {flippedPublisher ? getPublisherNames() : getPublisherVolumesNames()}
-                    {flippedPublisher ? getPublisherChart() : getPublisherVolumesChart()}
+                    {getPublisherOrGenreNames(false, flippedPublisher)}
+                    {getPublisherOrGenreChart(false, flippedPublisher)}
                 </div>
-
                 <div className={Styles.Chip}>
                     <div className={Styles.toggleBar}>
                         Genre Overview per
                         <div className={Styles.toggles}>
-                            <button className={flippedGenre ? Styles.activeButton : Styles.inactiveButton} onClick={getGenrePerSeries} >Series</button>
-                            <button className={flippedGenre ? Styles.inactiveButton : Styles.activeButton} onClick={getGenrePerVolumes} >Volumes</button>
+                            <button className={getButtonStyles(!flippedGenre)} onClick={() => setFlippedGenre(false)}>Series</button>
+                            <button className={getButtonStyles(flippedGenre)} onClick={() => setFlippedGenre(true)}>Volumes</button>
                         </div>
                     </div>
-                    {flippedGenre ? getGenreNames() : getGenreVolumesNames()}
-                    {flippedGenre ? getGenreChart() : getGenreVolumesChart()}
+                    {getPublisherOrGenreNames(true, flippedGenre)}
+                    {getPublisherOrGenreChart(true, flippedGenre)}
                 </div>
             </div>
         </div>
