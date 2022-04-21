@@ -60,7 +60,7 @@ const EditUserMangaDialog: React.FunctionComponent<IEditUserMangaDialog> = (prop
     }
 
     return (
-        <div className={Styles.Modal} onClick={props.onUserMangaEditCancel}>
+        <div className={Styles.Modal}>
             <div className={Styles.Dialog} onClick={e => e.stopPropagation()}>
                 <div className={Styles.FormContainer}>
                     <div className={Styles.FormInput}>

@@ -94,7 +94,7 @@ const EditMangaDialog: React.FunctionComponent<IEditMangaDialog> = (props) => {
     }
 
     return (
-        <div className={Styles.Modal} onClick={props.onMangaEditCancel}>
+        <div className={Styles.Modal}>
             <div className={Styles.Dialog} onClick={e => e.stopPropagation()}>
                 <div className={Styles.FormContainer}>
                     <div className={Styles.FormInput}>
@@ -171,7 +171,7 @@ const EditMangaDialog: React.FunctionComponent<IEditMangaDialog> = (props) => {
                 {/* Buttons */}
                 <div className={Styles.FormButtonRow}>
                     {manga.mangaid &&
-                    <Button label={"Delete"} icon="pi pi-trash" onClick={() => {
+                    <Button className="p-button-danger" label={"Delete"} icon="pi pi-trash" onClick={() => {
                         deleteManga();
                     }} />}
                     <Button label={"Save"} icon="pi pi-save" onClick={() => {
