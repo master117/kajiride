@@ -29,14 +29,11 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
     const [mangaDialogVisible, setMangaDialogVisible] = useState(!id);
     const [manga, setManga] = useState<Manga>({} as Manga);
     const [userManga, setUserManga] = useState<UserManga>({} as UserManga);
-    const [update, setUpdate] = useState(true);
     const [updateUserManga, setUpdateUserManga] = useState(true);
 
     useEffect(() => {
-        if (!update || !id)
+        if (!id)
             return;
-
-        setUpdate(false);
 
         axios
             .get(
@@ -54,7 +51,7 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
                 console.log(error.message);
                 console.log(error.config);
             });
-    }, [update, id, history]);
+    }, [id, history]);
 
     useEffect(() => {
         if (!updateUserManga || !id || !props.user)
@@ -83,17 +80,17 @@ const MangaPage: React.FunctionComponent<IMangaPageProps> = (props) => {
 
     const onMangaAdded = (manga: Manga) => {
         history.replace('/manga/' + manga.mangaid);
-        setMangaDialogVisible(false)
+        console.log("aaaaaaaaaaaaaa")
+        history.go(0);
     }
 
     const onMangaUpdated = () => {
-        setUpdate(true);
-        setMangaDialogVisible(false);
+        history.go(0);
     }
 
     const onMangaDeleted = () => {
         history.push('/');
-        setMangaDialogVisible(false);
+        history.go(0);
     }
 
     const onUserMangaUpdated = () => {

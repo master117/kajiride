@@ -4,11 +4,11 @@ import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
 
 import { Manga } from '../../../Types/Manga';
 
 import Styles from "./AddReleaseDialog.module.css";
+import { InputNumber } from "primereact/inputnumber";
 
 interface IAddReleaseDialogProps {
     manga: Manga[];
@@ -38,7 +38,8 @@ const AddReleaseDialog: React.FunctionComponent<IAddReleaseDialogProps> = (props
             onHide={props.onHide}
             dismissableMask={true}
             header={"New Release"}
-            closable={false} >
+            closable={false}
+        >
             <table className={Styles.Table}>
                 <tbody>
                     <tr>
@@ -81,11 +82,11 @@ const AddReleaseDialog: React.FunctionComponent<IAddReleaseDialogProps> = (props
                             <span className={Styles.Label}>Volume:</span>
                         </td>
                         <td>
-                            <InputText
+                            <InputNumber
                                 value={volume}
-                                keyfilter="pint"
                                 onChange={(e) => {
-                                    setVolume(parseInt(e.currentTarget.value));
+                                    if(e.value !== null)
+                                        setVolume(e.value);
                                 }} />
                         </td>
                     </tr>

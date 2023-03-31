@@ -4,10 +4,10 @@ import { Button } from "primereact/button";
 import { Calendar } from 'primereact/calendar';
 import { Checkbox } from 'primereact/checkbox';
 import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
+import { DataTable, DataTableRowEditEvent, DataTableRowEditSaveEvent } from 'primereact/datatable';
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from 'primereact/dropdown';
-import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 
 import { Manga } from "../../../Types/Manga";
 import { Release } from "../../../Types/Release";
@@ -44,24 +44,24 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
         }));
     }, [props]);
 
-    const onRowEditorValidator = (rowData: any) => {
+    const onRowEditValidator = (rowData: any) => {
         return true;
     }
 
-    const onRowEditInit = (event: { originalEvent: Event; data: any; }) => {
+    const onRowEditInit = (event: DataTableRowEditEvent) => {
         let tempClonedRows = [...clonedRows];
         tempClonedRows[event.data.release.releaseId] = { release: { ...event.data.release }, manga: { ...event.data.manga } };
         setClonedRows(tempClonedRows);
     }
 
-    const onRowEditSave = (event: { originalEvent: Event; data: any; }) => {
-        if (!onRowEditorValidator(event.data))
+    const onRowEditSave = (event: DataTableRowEditSaveEvent) => {
+        if(!onRowEditValidator(event.data))
             return;
 
         props.onUpdate(event.data.release)
     }
 
-    const onRowEditCancel = (event: { originalEvent: Event; data: any; index: number; }) => {
+    const onRowEditCancel = (event: DataTableRowEditEvent) => {
         let tempData = [...releaseMangaData];
         tempData[event.index] = clonedRows[event.data.release.releaseId];
         setReleaseMangaData(tempData);
@@ -111,7 +111,7 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
                 optionLabel="name"
                 onChange={(e) => {
                     const currManga = props.manga.find(x => x.mangaid === e.value.mangaid);
-                    if (currManga) {
+                    if(currManga) {
                         let tempData = [...releaseMangaData];
                         tempData[editorProps.rowIndex].manga = currManga;
                         setReleaseMangaData(tempData);
@@ -124,13 +124,14 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
 
     const volumeEditor = (editorProps: any) => {
         return (
-            <InputText
+            <InputNumber
                 value={releaseMangaData[editorProps.rowIndex].release.volume}
-                keyfilter="pint"
                 onChange={(e) => {
-                    let tempData = [...releaseMangaData];
-                    tempData[editorProps.rowIndex].release.volume = parseInt(e.currentTarget.value);
-                    setReleaseMangaData(tempData);
+                    if(e.value !== null) {
+                        let tempData = [...releaseMangaData];
+                        tempData[editorProps.rowIndex].release.volume = e.value;
+                        setReleaseMangaData(tempData);
+                    }
                 }} />
         )
     }
@@ -142,17 +143,19 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
             className={Styles.Dialog}
             dismissableMask={true}
             header={"Edit Release"}>
-            <DataTable value={releaseMangaData}
+            <DataTable
+                value={releaseMangaData}
                 editMode="row"
-                rowEditorValidator={onRowEditorValidator}
+                rowEditValidator={onRowEditValidator}
                 onRowEditInit={onRowEditInit}
                 onRowEditSave={onRowEditSave}
-                onRowEditCancel={onRowEditCancel}>
+                onRowEditCancel={onRowEditCancel}
+            >
                 {props.editable ? <Column field="release.active" header="" body={activeTemplate} style={{
                     'width': '40px',
                     'textAlign': 'center',
-                    "padding-left": "0px",
-                    "padding-right": "0px",
+                    "paddingLeft": "0px",
+                    "paddingRight": "0px",
                 }}
                 /> : null}
                 <Column field="release.releasedate" header="Date" body={releaseDateTemplate} editor={releaseDateEditor} />
@@ -162,18 +165,18 @@ const ReleaseGroupDialog: React.FunctionComponent<IReleaseGroupProps> = (props) 
                 {props.editable ? <Column rowEditor={true} style={{
                     'width': '40px',
                     'textAlign': 'center',
-                    "border-right": "0px",
-                    "padding-left": "0px",
-                    "padding-right": "0px",
+                    "borderRight": "0px",
+                    "paddingLeft": "0px",
+                    "paddingRight": "0px",
                 }}
                 /> : null}
                 {props.editable ? <Column field="release.active" header="" body={deleteTemplate} style={{
                     'width': '40px',
                     'textAlign': 'center',
-                    "border-left": "0px",
-                    "padding-left": "0px",
-                    "padding-right": "0px",
-                }} 
+                    "borderLeft": "0px",
+                    "paddingLeft": "0px",
+                    "paddingRight": "0px",
+                }}
                 /> : null}
             </DataTable>
         </Dialog >

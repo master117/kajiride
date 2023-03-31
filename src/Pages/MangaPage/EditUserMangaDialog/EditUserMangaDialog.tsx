@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { Button } from "primereact/button"
 import { InputTextarea } from 'primereact/inputtextarea';
-import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 
 import { User } from "../../../Types/User";
 import { UserManga } from "../../../Types/UserManga";
@@ -65,13 +65,13 @@ const EditUserMangaDialog: React.FunctionComponent<IEditUserMangaDialog> = (prop
                 <div className={Styles.FormContainer}>
                     <div className={Styles.FormInput}>
                         <span className="p-float-label">
-                            <InputText id="score" value={userManga.score ? userManga.score : ""} keyfilter="pint" onChange={(e) => setUserManga({...userManga, score: parseInt(e.currentTarget.value) })} />
+                            <InputNumber id="score" value={userManga.score ? userManga.score : 0} onChange={(e) => { if(e.value !== null) setUserManga({...userManga, score: e.value})}} />
                             <label htmlFor="score">Score</label>
                         </span>
                     </div>
                     <div className={Styles.FormInput}>
                         <span className="p-float-label">
-                            <InputText id="owned" value={userManga.owned ? userManga.owned : ""} keyfilter="pint" onChange={(e) => setUserManga({...userManga, owned: parseInt(e.currentTarget.value) })} />
+                            <InputNumber id="owned" value={userManga.owned ? userManga.owned : 0} onChange={(e) => { if(e.value !== null) setUserManga({...userManga, owned: e.value})}} />
                             <label htmlFor="owned">Owned</label>
                         </span>
                     </div>

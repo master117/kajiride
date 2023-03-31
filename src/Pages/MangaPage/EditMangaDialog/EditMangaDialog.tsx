@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from 'react'
 
 import { Button } from "primereact/button"
+import { InputNumber } from 'primereact/inputnumber';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
@@ -137,7 +138,7 @@ const EditMangaDialog: React.FunctionComponent<IEditMangaDialog> = (props) => {
                     </div>
                     <div className={Styles.FormInput}>
                         <span className="p-float-label">
-                            <InputText id="volumes" className={Styles.Volumes} value={manga.volumes ? manga.volumes : ""} keyfilter="pint" onChange={(e) => setManga({...manga, volumes: parseInt(e.currentTarget.value)})} />
+                            <InputNumber id="volumes" className={Styles.Volumes} value={manga.volumes ? manga.volumes : 0} onChange={(e) => {if(e.value !== null) setManga({...manga, volumes: e.value})}} />
                             <label htmlFor="volumes">Volumes</label>
                         </span>
                     </div>

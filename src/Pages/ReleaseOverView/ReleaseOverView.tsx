@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 
-import FullCalendar, { EventContentArg } from '@fullcalendar/react'
+import FullCalendar from '@fullcalendar/react';
+import { EventContentArg } from "@fullcalendar/core";
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import { EventApi, EventInput } from "@fullcalendar/core";

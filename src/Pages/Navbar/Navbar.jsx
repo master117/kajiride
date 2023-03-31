@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Menu } from "primereact/menu";
@@ -10,10 +10,10 @@ import Login from "./Login/Login";
 import Styles from './Navbar.module.css';
 
 const Navbar = (props) => {
-
+    const navmenu = useRef(null);
+    const usermenu = useRef(null);
     const [showLogin, setShowLogin] = useState(false);
-    const [navigationMenu, setNavigationMenu] = useState(undefined);
-    const [userMenu, setUserMenu] = useState(undefined);
+    
     const hideLogin = () => {
         setShowLogin(false);
     }
@@ -41,8 +41,8 @@ const Navbar = (props) => {
                         <Link to="/releases/" className={Styles.Link}>Releases</Link>
                     </div>
                     <div className={Styles.HamburgerMenu}>
-                        <Menu model={navigationItems} popup={true} ref={el => setNavigationMenu(el)} />
-                        <Button icon="pi pi-bars" onClick={(event) => navigationMenu.toggle(event)} />
+                        <Menu model={navigationItems} popup ref={navmenu} />
+                        <Button icon="pi pi-bars" onClick={(event) => navmenu.current.toggle(event)} />
                     </div>
                 </nav>
                 <div className={Styles.Right}>
@@ -50,8 +50,8 @@ const Navbar = (props) => {
                     <Searchbar />
                     {props.user ?
                         <div className={Styles.UserMenu}>
-                            <Menu model={userItems} popup={true} ref={el => setUserMenu(el)} />
-                            <Button label={props.user.name.toUpperCase()} onClick={(event) => userMenu.toggle(event)} />
+                            <Menu model={userItems} popup ref={usermenu} />
+                            <Button label={props.user.name.toUpperCase()} onClick={(event) => usermenu.current.toggle(event)} />
                         </div>
                         : <Button label={"Login"} icon="pi pi-key" className={Styles.Button} onClick={() => setShowLogin(true)} />
                     }
